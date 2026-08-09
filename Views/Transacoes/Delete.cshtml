@@ -1,0 +1,46 @@
+@model ControleFinanceiro.Models.Transacao
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Excluir Transação";
+    var culturaBr = new CultureInfo("pt-BR");
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card-custom p-4 border-danger">
+            <h4 class="fw-bold text-danger mb-3">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Exclusão
+            </h4>
+
+            <p>Você tem certeza que deseja excluir a seguinte transação?</p>
+
+            <div class="bg-light p-3 rounded-3 mb-4 border">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted fs-7">Descrição:</span>
+                    <strong class="fs-6">@Model.Descricao</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted fs-7">Valor:</span>
+                    <strong class="fs-6 text-danger">@Model.Valor.ToString("C", culturaBr)</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted fs-7">Data:</span>
+                    <span>@Model.Data.ToString("dd/MM/yyyy")</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted fs-7">Categoria:</span>
+                    <span class="badge bg-secondary">@(Model.Categoria?.Nome ?? "Sem Categoria")</span>
+                </div>
+            </div>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary rounded-3">Cancelar</a>
+                    <button type="submit" class="btn btn-danger rounded-3">Excluir Definitivamente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+@model IEnumerable<ControleFinanceiro.Models.Categoria>
+
+@{
+    ViewData["Title"] = "Categorias";
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold mb-1"><i class="bi bi-tags text-primary"></i> Categorias</h2>
+        <p class="text-muted mb-0">Gerencie as categorias de receitas e despesas.</p>
+    </div>
+    <div>
+        <a asp-action="Create" class="btn btn-custom-primary d-flex align-items-center gap-2">
+            <i class="bi bi-plus-circle-fill"></i> Nova Categoria
+        </a>
+    </div>
+</div>
+
+<div class="row g-3">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 col-lg-3">
+            <div class="card-custom p-3 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge rounded-pill px-3 py-2" style="background-color: @item.CorHex; color: white;">
+                            <i class="bi @item.Icone me-1"></i> @item.Nome
+                        </span>
+                        <small class="text-muted fw-semibold">@item.Transacoes.Count transação(ões)</small>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-1 mt-3">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="Editar">
+                        <i class="bi bi-pencil-fill"></i> Editar
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Excluir">
+                        <i class="bi bi-trash-fill"></i> Excluir
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

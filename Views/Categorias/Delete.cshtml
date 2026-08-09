@@ -1,0 +1,33 @@
+@model ControleFinanceiro.Models.Categoria
+
+@{
+    ViewData["Title"] = "Excluir Categoria";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card-custom p-4 border-danger">
+            <h4 class="fw-bold text-danger mb-3">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Exclusão
+            </h4>
+
+            <p>Você tem certeza que deseja excluir a categoria <strong>@Model.Nome</strong>?</p>
+
+            @if (Model.Transacoes.Any())
+            {
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Atenção: Esta categoria possui <strong>@Model.Transacoes.Count transação(ões)</strong> vinculadas. Você não poderá excluí-la até reclassificar ou excluir essas transações.
+                </div>
+            }
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary rounded-3">Cancelar</a>
+                    <button type="submit" class="btn btn-danger rounded-3" disabled="@(Model.Transacoes.Any())">Excluir Definitivamente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

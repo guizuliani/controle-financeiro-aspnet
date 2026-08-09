@@ -1,0 +1,203 @@
+@model ControleFinanceiro.Models.ViewModels.DashboardViewModel
+@using ControleFinanceiro.Models.Enums
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Dashboard Financeiro";
+    var culturaBr = new CultureInfo("pt-BR");
+    var meses = new[] { "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" };
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold mb-1">Painel Financeiro</h2>
+        <p class="text-muted mb-0">Resumo das suas finanças em @meses[Model.MesAtual - 1] de @Model.AnoAtual</p>
+    </div>
+
+    <!-- Filtro de Mês/Ano -->
+    <form method="get" class="d-flex align-items-center gap-2">
+        <select name="mes" class="form-select form-select-sm rounded-3 shadow-sm">
+            @for (int i = 1; i <= 12; i++)
+            {
+                <option value="@i" selected="@(Model.MesAtual == i)">@meses[i - 1]</option>
+            }
+        </select>
+
+        <select name="ano" class="form-select form-select-sm rounded-3 shadow-sm">
+            @for (int a = DateTime.Today.Year - 2; a <= DateTime.Today.Year + 2; a++)
+            {
+                <option value="@a" selected="@(Model.AnoAtual == a)">@a</option>
+            }
+        </select>
+
+        <button type="submit" class="btn btn-sm btn-outline-primary rounded-3">
+            <i class="bi bi-funnel-fill"></i> Filtrar
+        </button>
+    </form>
+</div>
+
+<!-- Cards Principais -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card-custom stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted fw-semibold">Receitas do Mês</span>
+                <div class="icon-box" style="background-color: rgba(16, 185, 129, 0.1); color: #10b981;">
+                    <i class="bi bi-arrow-up-right-circle-fill"></i>
+                </div>
+            </div>
+            <h3 class="fw-bold text-success mb-0">@Model.TotalReceitas.ToString("C", culturaBr)</h3>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-custom stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted fw-semibold">Despesas do Mês</span>
+                <div class="icon-box" style="background-color: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                    <i class="bi bi-arrow-down-left-circle-fill"></i>
+                </div>
+            </div>
+            <h3 class="fw-bold text-danger mb-0">@Model.TotalDespesas.ToString("C", culturaBr)</h3>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-custom stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted fw-semibold">Saldo do Mês</span>
+                <div class="icon-box" style="background-color: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+            </div>
+            <h3 class="fw-bold @(Model.SaldoTotal >= 0 ? "text-primary" : "text-danger") mb-0">
+                @Model.SaldoTotal.ToString("C", culturaBr)
+            </h3>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Gráfico de Despesas -->
+    <div class="col-lg-5">
+        <div class="card-custom p-4 h-100">
+            <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                <i class="bi bi-pie-chart-fill text-primary"></i> Despesas por Categoria
+            </h5>
+
+            @if (Model.DespesasPorCategoria.Any())
+            {
+                <div style="max-height: 280px; position: relative;">
+                    <canvas id="graficoDespesas"></canvas>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-info-circle fs-1 mb-2"></i>
+                    <p class="mb-0">Nenhuma despesa registrada neste mês.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Últimas Transações -->
+    <div class="col-lg-7">
+        <div class="card-custom p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0 d-flex align-items-center gap-2">
+                    <i class="bi bi-clock-history text-primary"></i> Lançamentos Recentes
+                </h5>
+                <a asp-controller="Transacoes" asp-action="Index" class="btn btn-sm btn-link text-decoration-none fw-semibold">
+                    Ver todos <i class="bi bi-chevron-right"></i>
+                </a>
+            </div>
+
+            @if (Model.UltimasTransacoes.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Descrição</th>
+                                <th>Categoria</th>
+                                <th>Data</th>
+                                <th class="text-end">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var t in Model.UltimasTransacoes)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold">@t.Descricao</div>
+                                        @if (!string.IsNullOrEmpty(t.Observacao))
+                                        {
+                                            <small class="text-muted d-block">@t.Observacao</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge rounded-pill" style="background-color: @(t.Categoria?.CorHex ?? "#6c757d"); color: white;">
+                                            <i class="bi @(t.Categoria?.Icone ?? "bi-tag") me-1"></i> @(t.Categoria?.Nome ?? "Sem categoria")
+                                        </span>
+                                    </td>
+                                    <td class="text-muted fs-7">@t.Data.ToString("dd/MM/yyyy")</td>
+                                    <td class="text-end fw-bold @(t.Tipo == TipoTransacao.Receita ? "text-success" : "text-danger")">
+                                        @(t.Tipo == TipoTransacao.Receita ? "+" : "-") @t.Valor.ToString("C", culturaBr)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-inbox fs-1 mb-2"></i>
+                    <p class="mb-0">Nenhuma transação cadastrada ainda.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @if (Model.DespesasPorCategoria.Any())
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const ctx = document.getElementById('graficoDespesas').getContext('2d');
+                const labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DespesasPorCategoria.Select(c => c.Categoria)));
+                const data = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DespesasPorCategoria.Select(c => c.Total)));
+                const colors = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DespesasPorCategoria.Select(c => c.CorHex)));
+
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: colors,
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: { family: 'Inter', size: 12 },
+                                    padding: 16
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        </script>
+    }
+}

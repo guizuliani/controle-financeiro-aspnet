@@ -1,0 +1,141 @@
+@model IEnumerable<ControleFinanceiro.Models.Transacao>
+@using ControleFinanceiro.Models.Enums
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Transações";
+    var culturaBr = new CultureInfo("pt-BR");
+    var meses = new[] { "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" };
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold mb-1"><i class="bi bi-arrow-down-up text-primary"></i> Transações</h2>
+        <p class="text-muted mb-0">Gerencie todas as suas entradas e saídas de forma simples.</p>
+    </div>
+    <div>
+        <a asp-action="Create" class="btn btn-custom-primary d-flex align-items-center gap-2">
+            <i class="bi bi-plus-circle-fill"></i> Nova Transação
+        </a>
+    </div>
+</div>
+
+<!-- Filtros de Busca -->
+<div class="card-custom p-4 mb-4">
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label fw-semibold fs-7">Buscar por Descrição</label>
+            <input type="text" name="busca" value="@ViewBag.Busca" class="form-control rounded-3" placeholder="Ex: Mercado, Salário..." />
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label fw-semibold fs-7">Mês</label>
+            <select name="mes" class="form-select rounded-3">
+                @for (int i = 1; i <= 12; i++)
+                {
+                    <option value="@i" selected="@(ViewBag.Mes == i)">@meses[i - 1]</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label fw-semibold fs-7">Ano</label>
+            <select name="ano" class="form-select rounded-3">
+                @for (int a = DateTime.Today.Year - 2; a <= DateTime.Today.Year + 2; a++)
+                {
+                    <option value="@a" selected="@(ViewBag.Ano == a)">@a</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label fw-semibold fs-7">Tipo</label>
+            <select name="tipo" class="form-select rounded-3">
+                <option value="">Todos</option>
+                <option value="1" selected="@(ViewBag.Tipo != null && (int)ViewBag.Tipo == 1)">Receita</option>
+                <option value="2" selected="@(ViewBag.Tipo != null && (int)ViewBag.Tipo == 2)">Despesa</option>
+            </select>
+        </div>
+
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary rounded-3 flex-grow-1">
+                <i class="bi bi-search"></i> Filtrar
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary rounded-3">
+                <i class="bi bi-x-circle"></i> Limpar
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Tabela de Transações -->
+<div class="card-custom p-4">
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Categoria</th>
+                        <th>Tipo</th>
+                        <th class="text-end">Valor</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold text-secondary">@item.Data.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <div class="fw-bold">@item.Descricao</div>
+                                @if (!string.IsNullOrEmpty(item.Observacao))
+                                {
+                                    <small class="text-muted">@item.Observacao</small>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill" style="background-color: @(item.Categoria?.CorHex ?? "#6c757d"); color: white;">
+                                    <i class="bi @(item.Categoria?.Icone ?? "bi-tag") me-1"></i> @(item.Categoria?.Nome ?? "Sem categoria")
+                                </span>
+                            </td>
+                            <td>
+                                @if (item.Tipo == TipoTransacao.Receita)
+                                {
+                                    <span class="badge-tipo-receita">Receita</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-tipo-despesa">Despesa</span>
+                                }
+                            </td>
+                            <td class="text-end fw-bold @(item.Tipo == TipoTransacao.Receita ? "text-success" : "text-danger") fs-6">
+                                @(item.Tipo == TipoTransacao.Receita ? "+" : "-") @item.Valor.ToString("C", culturaBr)
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary" title="Editar">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger" title="Excluir">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-inbox fs-1 mb-2"></i>
+            <h5>Nenhuma transação encontrada.</h5>
+            <p class="mb-0">Tente ajustar os filtros ou cadastre um novo lançamento.</p>
+        </div>
+    }
+</div>
