@@ -5,6 +5,7 @@
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-MVC-512BD4?style=for-the-badge&logo=dotnet)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Flowbite](https://img.shields.io/badge/Flowbite-1A56DB?style=for-the-badge&logo=flowbite&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 
 Aplicação Web moderna para **gestão financeira pessoal/empresarial**, desenvolvida em **ASP.NET Core MVC com .NET 10**, com front-end moderno em **Tailwind CSS + Flowbite**, suporte a **Cartões de Crédito**, **Controle de Faturas**, **Compras Parceladas** e **Sistema Configurável de Pontos e Milhas**.
@@ -86,6 +87,39 @@ Aplicação Web moderna para **gestão financeira pessoal/empresarial**, desenvo
 3. **Acessar no navegador**:
    * HTTPS: `https://localhost:7050`
    * HTTP: `http://localhost:5050`
+
+---
+
+## 🐳 Executando com Docker e Docker Compose
+
+A aplicação já conta com `Dockerfile` multi-stage otimizado para o **.NET 10** e `docker-compose.yml` com persistência de dados do SQLite através de volumes.
+
+### Opção 1: Via Docker Compose (Recomendado)
+
+Inicie a aplicação e o volume de dados com um único comando:
+
+```bash
+docker compose up -d
+```
+
+Acesse em: **[http://localhost:8080](http://localhost:8080)**
+
+Para parar os containers:
+```bash
+docker compose down
+```
+
+### Opção 2: Via Docker CLI Direto
+
+1. **Construir a imagem**:
+   ```bash
+   docker build -t controle-financeiro:latest .
+   ```
+
+2. **Executar o container com persistência de dados**:
+   ```bash
+   docker run -d --name controle-financeiro-app -p 8080:8080 -v sqlite-data:/app/data controle-financeiro:latest
+   ```
 
 ---
 

@@ -1,0 +1,16 @@
+**/.git
+**/.github
+**/.vs
+**/.vscode
+**/bin
+**/obj
+**/*.user
+**/*.db
+**/*.db-shm
+**/*.db-wal
+**/publish
+**/data
+tests
+Dockerfile*
+docker-compose*
+README.md

@@ -1,0 +1,19 @@
+services:
+  controle-financeiro:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: controle-financeiro-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/controle_financeiro.db
+    volumes:
+      - sqlite-data:/app/data
+
+volumes:
+  sqlite-data:
+    driver: local
