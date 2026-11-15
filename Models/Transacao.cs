@@ -22,7 +22,7 @@ namespace ControleFinanceiro.Models
         public DateTime Data { get; set; } = DateTime.Today;
 
         [Required(ErrorMessage = "O tipo é obrigatório.")]
-        public TipoTransacao Tipo { get; set; }
+        public TipoTransacao Tipo { get; set; } = TipoTransacao.Despesa;
 
         [Required(ErrorMessage = "A categoria é obrigatória.")]
         public int CategoriaId { get; set; }
@@ -31,5 +31,35 @@ namespace ControleFinanceiro.Models
 
         [StringLength(250, ErrorMessage = "A observação pode ter no máximo 250 caracteres.")]
         public string? Observacao { get; set; }
+
+        // --- Cartão de Crédito e Parcelamento ---
+        [Display(Name = "Forma de Pagamento")]
+        public FormaPagamento FormaPagamento { get; set; } = FormaPagamento.ContaCorrente;
+
+        [Display(Name = "Cartão de Crédito")]
+        public int? CartaoCreditoId { get; set; }
+
+        public CartaoCredito? CartaoCredito { get; set; }
+
+        [Display(Name = "Nº Parcela")]
+        public int NumeroParcela { get; set; } = 1;
+
+        [Display(Name = "Total de Parcelas")]
+        public int TotalParcelas { get; set; } = 1;
+
+        public Guid? CompraId { get; set; }
+
+        [Display(Name = "Mês da Fatura")]
+        public int? FaturaMes { get; set; }
+
+        [Display(Name = "Ano da Fatura")]
+        public int? FaturaAno { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        [Display(Name = "Pontos Gerados")]
+        public decimal PontosGerados { get; set; } = 0;
+
+        [Display(Name = "Fatura Paga")]
+        public bool FaturaPaga { get; set; } = false;
     }
 }

@@ -11,7 +11,7 @@
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
         <h2 class="fw-bold mb-1"><i class="bi bi-arrow-down-up text-primary"></i> Transações</h2>
-        <p class="text-muted mb-0">Gerencie todas as suas entradas e saídas de forma simples.</p>
+        <p class="text-muted mb-0">Gerencie todas as suas entradas, saídas, compras no cartão e parcelamentos.</p>
     </div>
     <div>
         <a asp-action="Create" class="btn btn-custom-primary d-flex align-items-center gap-2">
@@ -24,13 +24,13 @@
 <div class="card-custom p-4 mb-4">
     <form method="get" class="row g-3 align-items-end">
         <div class="col-md-3">
-            <label class="form-label fw-semibold fs-7">Buscar por Descrição</label>
-            <input type="text" name="busca" value="@ViewBag.Busca" class="form-control rounded-3" placeholder="Ex: Mercado, Salário..." />
+            <label class="form-label fw-semibold fs-7">Buscar Descrição</label>
+            <input type="text" name="busca" value="@ViewBag.Busca" class="form-control form-control-sm rounded-3" placeholder="Ex: Mercado, Salário..." />
         </div>
 
         <div class="col-md-2">
             <label class="form-label fw-semibold fs-7">Mês</label>
-            <select name="mes" class="form-select rounded-3">
+            <select name="mes" class="form-select form-select-sm rounded-3">
                 @for (int i = 1; i <= 12; i++)
                 {
                     <option value="@i" selected="@(ViewBag.Mes == i)">@meses[i - 1]</option>
@@ -40,7 +40,7 @@
 
         <div class="col-md-2">
             <label class="form-label fw-semibold fs-7">Ano</label>
-            <select name="ano" class="form-select rounded-3">
+            <select name="ano" class="form-select form-select-sm rounded-3">
                 @for (int a = DateTime.Today.Year - 2; a <= DateTime.Today.Year + 2; a++)
                 {
                     <option value="@a" selected="@(ViewBag.Ano == a)">@a</option>
@@ -49,21 +49,28 @@
         </div>
 
         <div class="col-md-2">
-            <label class="form-label fw-semibold fs-7">Tipo</label>
-            <select name="tipo" class="form-select rounded-3">
+            <label class="form-label fw-semibold fs-7">Pagamento</label>
+            <select name="formaPagamento" class="form-select form-select-sm rounded-3">
                 <option value="">Todos</option>
-                <option value="1" selected="@(ViewBag.Tipo != null && (int)ViewBag.Tipo == 1)">Receita</option>
-                <option value="2" selected="@(ViewBag.Tipo != null && (int)ViewBag.Tipo == 2)">Despesa</option>
+                <option value="1" selected="@(ViewBag.FormaPagamento != null && (int)ViewBag.FormaPagamento == 1)">Conta Corrente</option>
+                <option value="2" selected="@(ViewBag.FormaPagamento != null && (int)ViewBag.FormaPagamento == 2)">Cartão de Crédito</option>
             </select>
         </div>
 
-        <div class="col-md-3 d-flex gap-2">
-            <button type="submit" class="btn btn-primary rounded-3 flex-grow-1">
+        <div class="col-md-3">
+            <label class="form-label fw-semibold fs-7">Cartão</label>
+            <select name="cartaoId" class="form-select form-select-sm rounded-3" asp-items="ViewBag.Cartoes">
+                <option value="">Todos os Cartões</option>
+            </select>
+        </div>
+
+        <div class="col-12 d-flex justify-content-end gap-2 pt-2">
+            <a asp-action="Index" class="btn btn-sm btn-outline-secondary rounded-3">
+                <i class="bi bi-x-circle"></i> Limpar Filtros
+            </a>
+            <button type="submit" class="btn btn-sm btn-primary rounded-3 px-4">
                 <i class="bi bi-search"></i> Filtrar
             </button>
-            <a asp-action="Index" class="btn btn-outline-secondary rounded-3">
-                <i class="bi bi-x-circle"></i> Limpar
-            </a>
         </div>
     </form>
 </div>
@@ -79,7 +86,9 @@
                         <th>Data</th>
                         <th>Descrição</th>
                         <th>Categoria</th>
-                        <th>Tipo</th>
+                        <th>Pagamento / Cartão</th>
+                        <th>Parcela</th>
+                        <th>Pontos</th>
                         <th class="text-end">Valor</th>
                         <th class="text-center">Ações</th>
                     </tr>
@@ -88,12 +97,12 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td class="fw-semibold text-secondary">@item.Data.ToString("dd/MM/yyyy")</td>
+                            <td class="fw-semibold text-secondary fs-7">@item.Data.ToString("dd/MM/yyyy")</td>
                             <td>
                                 <div class="fw-bold">@item.Descricao</div>
                                 @if (!string.IsNullOrEmpty(item.Observacao))
                                 {
-                                    <small class="text-muted">@item.Observacao</small>
+                                    <small class="text-muted d-block">@item.Observacao</small>
                                 }
                             </td>
                             <td>
@@ -102,13 +111,41 @@
                                 </span>
                             </td>
                             <td>
-                                @if (item.Tipo == TipoTransacao.Receita)
+                                @if (item.FormaPagamento == FormaPagamento.CartaoCredito)
                                 {
-                                    <span class="badge-tipo-receita">Receita</span>
+                                    <span class="badge-cartao">
+                                        <i class="bi bi-credit-card-fill me-1"></i> @(item.CartaoCredito?.Nome ?? "Cartão")
+                                    </span>
+                                    @if (item.FaturaMes.HasValue)
+                                    {
+                                        <small class="text-muted d-block fs-8">Fatura @item.FaturaMes:D2/@item.FaturaAno</small>
+                                    }
                                 }
                                 else
                                 {
-                                    <span class="badge-tipo-despesa">Despesa</span>
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="bi bi-bank me-1"></i> Conta Corrente
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.TotalParcelas > 1)
+                                {
+                                    <span class="badge bg-secondary">@item.NumeroParcela/@item.TotalParcelas</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted fs-7">À vista</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.PontosGerados > 0)
+                                {
+                                    <span class="badge-pontos">+@item.PontosGerados.ToString("N1", culturaBr)</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted fs-7">-</span>
                                 }
                             </td>
                             <td class="text-end fw-bold @(item.Tipo == TipoTransacao.Receita ? "text-success" : "text-danger") fs-6">
@@ -135,7 +172,7 @@
         <div class="text-center py-5 text-muted">
             <i class="bi bi-inbox fs-1 mb-2"></i>
             <h5>Nenhuma transação encontrada.</h5>
-            <p class="mb-0">Tente ajustar os filtros ou cadastre um novo lançamento.</p>
+            <p class="mb-0">Ajuste os filtros ou cadastre um novo lançamento.</p>
         </div>
     }
 </div>

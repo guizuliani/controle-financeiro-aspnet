@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ControleFinanceiro.Models;
+using ControleFinanceiro.Models.Enums;
 
 namespace ControleFinanceiro.Data
 {
@@ -11,6 +12,8 @@ namespace ControleFinanceiro.Data
 
         public DbSet<Categoria> Categorias { get; set; } = null!;
         public DbSet<Transacao> Transacoes { get; set; } = null!;
+        public DbSet<CartaoCredito> CartoesCredito { get; set; } = null!;
+        public DbSet<ResgatePontos> ResgatesPontos { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,11 +30,56 @@ namespace ControleFinanceiro.Data
                 new Categoria { Id = 8, Nome = "Outros", CorHex = "#6c757d", Icone = "bi-three-dots" }
             );
 
+            modelBuilder.Entity<CartaoCredito>().HasData(
+                new CartaoCredito
+                {
+                    Id = 1,
+                    Nome = "C6 Carbon Mastercard Black",
+                    Bandeira = "Mastercard",
+                    CorHex = "#1e293b",
+                    LimiteTotal = 15000.00m,
+                    DiaFechamento = 20,
+                    DiaVencimento = 28,
+                    AcumulaPontos = true,
+                    NomeProgramaPontos = "C6 Átomos",
+                    TipoRegra = TipoRegraPontos.PorDolar,
+                    FatorPontuacao = 2.5m,
+                    CotacaoDolarReferencia = 5.50m
+                },
+                new CartaoCredito
+                {
+                    Id = 2,
+                    Nome = "Nubank Ultravioleta",
+                    Bandeira = "Mastercard",
+                    CorHex = "#820ad1",
+                    LimiteTotal = 8000.00m,
+                    DiaFechamento = 10,
+                    DiaVencimento = 17,
+                    AcumulaPontos = true,
+                    NomeProgramaPontos = "Cashback Nu",
+                    TipoRegra = TipoRegraPontos.Cashback,
+                    FatorPontuacao = 1.0m, // 1% cashback
+                    CotacaoDolarReferencia = 5.50m
+                }
+            );
+
             modelBuilder.Entity<Transacao>()
                 .HasOne(t => t.Categoria)
                 .WithMany(c => c.Transacoes)
                 .HasForeignKey(t => t.CategoriaId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Transacao>()
+                .HasOne(t => t.CartaoCredito)
+                .WithMany(c => c.Transacoes)
+                .HasForeignKey(t => t.CartaoCreditoId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<ResgatePontos>()
+                .HasOne(r => r.CartaoCredito)
+                .WithMany(c => c.Resgates)
+                .HasForeignKey(r => r.CartaoCreditoId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

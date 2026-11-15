@@ -10,8 +10,8 @@
 
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
-        <h2 class="fw-bold mb-1">Painel Financeiro</h2>
-        <p class="text-muted mb-0">Resumo das suas finanças em @meses[Model.MesAtual - 1] de @Model.AnoAtual</p>
+        <h2 class="fw-bold mb-1">Painel Financeiro & Cartões</h2>
+        <p class="text-muted mb-0">Resumo geral das suas finanças em @meses[Model.MesAtual - 1] de @Model.AnoAtual</p>
     </div>
 
     <!-- Filtro de Mês/Ano -->
@@ -36,53 +36,123 @@
     </form>
 </div>
 
-<!-- Cards Principais -->
+<!-- Cards Principais (Fluxo de Caixa + Cartão + Pontos) -->
 <div class="row g-3 mb-4">
-    <div class="col-md-4">
-        <div class="card-custom stat-card">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="text-muted fw-semibold">Receitas do Mês</span>
+    <!-- Receitas -->
+    <div class="col-md-6 col-xl">
+        <div class="card-custom stat-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted fw-semibold fs-7">Receitas em Conta</span>
                 <div class="icon-box" style="background-color: rgba(16, 185, 129, 0.1); color: #10b981;">
                     <i class="bi bi-arrow-up-right-circle-fill"></i>
                 </div>
             </div>
-            <h3 class="fw-bold text-success mb-0">@Model.TotalReceitas.ToString("C", culturaBr)</h3>
+            <h4 class="fw-bold text-success mb-0">@Model.TotalReceitas.ToString("C", culturaBr)</h4>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card-custom stat-card">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="text-muted fw-semibold">Despesas do Mês</span>
+    <!-- Despesas em Conta -->
+    <div class="col-md-6 col-xl">
+        <div class="card-custom stat-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted fw-semibold fs-7">Despesas em Conta</span>
                 <div class="icon-box" style="background-color: rgba(239, 68, 68, 0.1); color: #ef4444;">
                     <i class="bi bi-arrow-down-left-circle-fill"></i>
                 </div>
             </div>
-            <h3 class="fw-bold text-danger mb-0">@Model.TotalDespesas.ToString("C", culturaBr)</h3>
+            <h4 class="fw-bold text-danger mb-0">@Model.TotalDespesas.ToString("C", culturaBr)</h4>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card-custom stat-card">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="text-muted fw-semibold">Saldo do Mês</span>
+    <!-- Saldo em Conta -->
+    <div class="col-md-6 col-xl">
+        <div class="card-custom stat-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted fw-semibold fs-7">Saldo em Conta</span>
                 <div class="icon-box" style="background-color: rgba(59, 130, 246, 0.1); color: #3b82f6;">
                     <i class="bi bi-wallet2"></i>
                 </div>
             </div>
-            <h3 class="fw-bold @(Model.SaldoTotal >= 0 ? "text-primary" : "text-danger") mb-0">
+            <h4 class="fw-bold @(Model.SaldoTotal >= 0 ? "text-primary" : "text-danger") mb-0">
                 @Model.SaldoTotal.ToString("C", culturaBr)
-            </h3>
+            </h4>
+        </div>
+    </div>
+
+    <!-- Faturas do Mês -->
+    <div class="col-md-6 col-xl">
+        <div class="card-custom stat-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted fw-semibold fs-7">Faturas de Cartão</span>
+                <div class="icon-box" style="background-color: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+                    <i class="bi bi-credit-card-2-front-fill"></i>
+                </div>
+            </div>
+            <h4 class="fw-bold text-purple mb-0" style="color: #8b5cf6;">@Model.TotalFaturasMes.ToString("C", culturaBr)</h4>
+            <small class="text-muted fs-8">Total a pagar em @meses[Model.MesAtual - 1]</small>
+        </div>
+    </div>
+
+    <!-- Saldo de Pontos -->
+    <div class="col-md-6 col-xl">
+        <div class="card-custom stat-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted fw-semibold fs-7">Pontos & Milhas</span>
+                <div class="icon-box" style="background-color: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                    <i class="bi bi-stars"></i>
+                </div>
+            </div>
+            <h4 class="fw-bold text-warning mb-0">@Model.TotalPontosAcumulados.ToString("N0", culturaBr) <span class="fs-7 text-muted">pts</span></h4>
+            <a asp-controller="Pontos" asp-action="Index" class="text-decoration-none fs-8 fw-semibold">Ver extrato &rarr;</a>
         </div>
     </div>
 </div>
+
+<!-- Seção de Cartões (Uso do Limite) -->
+@if (Model.CartoesResumo.Any())
+{
+    <div class="card-custom p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0 d-flex align-items-center gap-2">
+                <i class="bi bi-credit-card text-primary"></i> Situação dos Cartões de Crédito
+            </h5>
+            <a asp-controller="Cartoes" asp-action="Index" class="btn btn-sm btn-link text-decoration-none fw-semibold">
+                Gerenciar Cartões <i class="bi bi-chevron-right"></i>
+            </a>
+        </div>
+
+        <div class="row g-3">
+            @foreach (var c in Model.CartoesResumo)
+            {
+                <div class="col-md-6">
+                    <div class="p-3 rounded-3 border bg-light">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong class="text-dark">@c.Nome</strong>
+                            <a asp-controller="Cartoes" asp-action="Fatura" asp-route-id="@c.Id" class="badge bg-primary text-decoration-none">
+                                Fatura: @c.FaturaMesAtual.ToString("C", culturaBr)
+                            </a>
+                        </div>
+                        <div class="progress rounded-pill mb-2" style="height: 8px;">
+                            <div class="progress-bar @(c.PercentualUso > 80 ? "bg-danger" : (c.PercentualUso > 50 ? "bg-warning" : "bg-primary"))" 
+                                 style="width: @c.PercentualUso%;"></div>
+                        </div>
+                        <div class="d-flex justify-content-between fs-8 text-muted">
+                            <span>Limite Usado: <strong class="text-danger">@c.LimiteUtilizado.ToString("C", culturaBr)</strong> (@c.PercentualUso%)</span>
+                            <span>Disponível: <strong class="text-success">@c.LimiteDisponivel.ToString("C", culturaBr)</strong></span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
 
 <div class="row g-4">
     <!-- Gráfico de Despesas -->
     <div class="col-lg-5">
         <div class="card-custom p-4 h-100">
             <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
-                <i class="bi bi-pie-chart-fill text-primary"></i> Despesas por Categoria
+                <i class="bi bi-pie-chart-fill text-primary"></i> Despesas do Mês por Categoria
             </h5>
 
             @if (Model.DespesasPorCategoria.Any())
@@ -106,7 +176,7 @@
         <div class="card-custom p-4 h-100">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="fw-bold mb-0 d-flex align-items-center gap-2">
-                    <i class="bi bi-clock-history text-primary"></i> Lançamentos Recentes
+                    <i class="bi bi-clock-history text-primary"></i> Últimos Lançamentos
                 </h5>
                 <a asp-controller="Transacoes" asp-action="Index" class="btn btn-sm btn-link text-decoration-none fw-semibold">
                     Ver todos <i class="bi bi-chevron-right"></i>
@@ -116,11 +186,11 @@
             @if (Model.UltimasTransacoes.Any())
             {
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
+                    <table class="table table-hover align-middle mb-0 fs-7">
                         <thead class="table-light">
                             <tr>
                                 <th>Descrição</th>
-                                <th>Categoria</th>
+                                <th>Pagamento</th>
                                 <th>Data</th>
                                 <th class="text-end">Valor</th>
                             </tr>
@@ -131,17 +201,25 @@
                                 <tr>
                                     <td>
                                         <div class="fw-semibold">@t.Descricao</div>
-                                        @if (!string.IsNullOrEmpty(t.Observacao))
-                                        {
-                                            <small class="text-muted d-block">@t.Observacao</small>
-                                        }
-                                    </td>
-                                    <td>
-                                        <span class="badge rounded-pill" style="background-color: @(t.Categoria?.CorHex ?? "#6c757d"); color: white;">
-                                            <i class="bi @(t.Categoria?.Icone ?? "bi-tag") me-1"></i> @(t.Categoria?.Nome ?? "Sem categoria")
+                                        <span class="badge rounded-pill" style="background-color: @(t.Categoria?.CorHex ?? "#6c757d"); color: white; font-size: 0.7rem;">
+                                            @(t.Categoria?.Nome ?? "Sem categoria")
                                         </span>
                                     </td>
-                                    <td class="text-muted fs-7">@t.Data.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        @if (t.FormaPagamento == FormaPagamento.CartaoCredito)
+                                        {
+                                            <span class="badge-cartao">@t.CartaoCredito?.Nome</span>
+                                            @if (t.PontosGerados > 0)
+                                            {
+                                                <small class="badge-pontos ms-1">+@t.PontosGerados.ToString("N0") pts</small>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-light text-dark border">Conta Corrente</span>
+                                        }
+                                    </td>
+                                    <td class="text-muted">@t.Data.ToString("dd/MM/yyyy")</td>
                                     <td class="text-end fw-bold @(t.Tipo == TipoTransacao.Receita ? "text-success" : "text-danger")">
                                         @(t.Tipo == TipoTransacao.Receita ? "+" : "-") @t.Valor.ToString("C", culturaBr)
                                     </td>

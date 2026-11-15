@@ -1,0 +1,167 @@
+@model ControleFinanceiro.Models.ViewModels.PontosViewModel
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Pontos & Milhas";
+    var culturaBr = new CultureInfo("pt-BR");
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold mb-1"><i class="bi bi-stars text-warning"></i> Painel de Pontos & Milhas</h2>
+        <p class="text-muted mb-0">Monitore sua pontuação acumulada por cartão, extrato e resgates.</p>
+    </div>
+    <div>
+        <a asp-action="Resgatar" class="btn btn-warning text-dark fw-bold rounded-3 shadow-sm d-flex align-items-center gap-2">
+            <i class="bi bi-box-arrow-up-right"></i> Registrar Resgate / Baixa
+        </a>
+    </div>
+</div>
+
+<!-- Cards de Programas -->
+<div class="row g-4 mb-4">
+    @if (Model.Programas.Any())
+    {
+        @foreach (var prog in Model.Programas)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card-custom p-4 h-100 position-relative overflow-hidden">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="badge rounded-pill px-3 py-1 mb-2 text-white" style="background-color: @prog.CorHex;">
+                                @prog.CartaoNome
+                            </span>
+                            <h5 class="fw-bold mb-0">@prog.NomePrograma</h5>
+                        </div>
+                        <div class="icon-box" style="background-color: rgba(245, 158, 11, 0.15); color: #f59e0b; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-star-fill fs-5"></i>
+                        </div>
+                    </div>
+
+                    <div class="my-3">
+                        <small class="text-muted d-block">Saldo Disponível:</small>
+                        <h2 class="fw-bold text-warning mb-0">@prog.SaldoAtual.ToString("N0", culturaBr) <span class="fs-6 text-muted">pts</span></h2>
+                    </div>
+
+                    <div class="d-flex justify-content-between fs-7 text-muted border-top pt-2">
+                        <span>Total Ganho: <strong class="text-success">+@prog.TotalAcumulado.ToString("N0", culturaBr)</strong></span>
+                        <span>Resgatado: <strong class="text-danger">-@prog.TotalResgatado.ToString("N0", culturaBr)</strong></span>
+                    </div>
+
+                    <div class="mt-2 text-muted fs-8">
+                        <i class="bi bi-gear-fill me-1"></i> Regra: @prog.RegraDescricao
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="card-custom p-4 text-center text-muted">
+                <i class="bi bi-stars fs-1 mb-2 text-warning"></i>
+                <h5>Nenhum cartão com programa de pontos ativado.</h5>
+                <p>Acesse a aba <strong>Cartões</strong> e ative a opção "Acumula Pontos" no seu cartão preferido!</p>
+                <div>
+                    <a asp-controller="Cartoes" asp-action="Index" class="btn btn-outline-primary">Ver Meus Cartões</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Extratos de Pontos e Resgates -->
+<div class="row g-4">
+    <!-- Últimos Pontos Gerados -->
+    <div class="col-lg-7">
+        <div class="card-custom p-4 h-100">
+            <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                <i class="bi bi-arrow-up-right-circle-fill text-success"></i> Extrato de Pontos Ganhos
+            </h5>
+
+            @if (Model.ExtratoTransacoes.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 fs-7">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Data</th>
+                                <th>Compra / Cartão</th>
+                                <th>Valor</th>
+                                <th class="text-end">Pontos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var t in Model.ExtratoTransacoes)
+                            {
+                                <tr>
+                                    <td class="text-muted">@t.Data.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <div class="fw-semibold text-dark">@t.Descricao</div>
+                                        <small class="text-muted">@t.CartaoCredito?.Nome</small>
+                                    </td>
+                                    <td>@t.Valor.ToString("C", culturaBr)</td>
+                                    <td class="text-end">
+                                        <span class="badge-pontos">+@t.PontosGerados.ToString("N1", culturaBr) pts</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <p class="mb-0">Nenhuma pontuação registrada ainda.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Histórico de Resgates / Transferências -->
+    <div class="col-lg-5">
+        <div class="card-custom p-4 h-100">
+            <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                <i class="bi bi-box-arrow-up-right text-warning"></i> Histórico de Resgates
+            </h5>
+
+            @if (Model.HistoricoResgates.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 fs-7">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Data</th>
+                                <th>Destino / Descrição</th>
+                                <th class="text-end">Pontos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in Model.HistoricoResgates)
+                            {
+                                <tr>
+                                    <td class="text-muted">@r.Data.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <div class="fw-semibold">@r.Descricao</div>
+                                        <small class="text-muted">@r.CartaoCredito?.NomeProgramaPontos (@r.CartaoCredito?.Nome)</small>
+                                    </td>
+                                    <td class="text-end fw-bold text-danger">
+                                        -@r.Pontos.ToString("N0", culturaBr) pts
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-inbox fs-2 mb-2"></i>
+                    <p class="mb-0">Nenhum resgate registrado até o momento.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

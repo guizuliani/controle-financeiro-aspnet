@@ -1,0 +1,136 @@
+@model ControleFinanceiro.Models.CartaoCredito
+@using ControleFinanceiro.Models.Enums
+
+@{
+    ViewData["Title"] = "Novo Cartão de Crédito";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card-custom p-4">
+            <h4 class="fw-bold mb-4">
+                <i class="bi bi-credit-card-2-front-fill text-primary"></i> Cadastrar Cartão de Crédito
+            </h4>
+
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Dados Básicos -->
+                <h6 class="fw-bold text-secondary mb-3"><i class="bi bi-info-circle"></i> Dados Principais</h6>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-8">
+                        <label asp-for="Nome" class="form-label fw-semibold"></label>
+                        <input asp-for="Nome" class="form-control rounded-3" placeholder="Ex: C6 Carbon Black, Nubank, Itaú..." />
+                        <span asp-validation-for="Nome" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Bandeira" class="form-label fw-semibold"></label>
+                        <select asp-for="Bandeira" class="form-select rounded-3">
+                            <option value="Mastercard">Mastercard</option>
+                            <option value="Visa">Visa</option>
+                            <option value="Elo">Elo</option>
+                            <option value="American Express">American Express</option>
+                            <option value="Outra">Outra</option>
+                        </select>
+                        <span asp-validation-for="Bandeira" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label asp-for="LimiteTotal" class="form-label fw-semibold">Limite Total (R$)</label>
+                        <input asp-for="LimiteTotal" type="number" step="0.01" class="form-control rounded-3" placeholder="0,00" />
+                        <span asp-validation-for="LimiteTotal" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="DiaFechamento" class="form-label fw-semibold">Dia de Fechamento</label>
+                        <input asp-for="DiaFechamento" type="number" min="1" max="31" class="form-control rounded-3" />
+                        <span asp-validation-for="DiaFechamento" class="text-danger"></span>
+                        <small class="text-muted">Dia em que a fatura fecha.</small>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="DiaVencimento" class="form-label fw-semibold">Dia de Vencimento</label>
+                        <input asp-for="DiaVencimento" type="number" min="1" max="31" class="form-control rounded-3" />
+                        <span asp-validation-for="DiaVencimento" class="text-danger"></span>
+                        <small class="text-muted">Dia do pagamento da fatura.</small>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="CorHex" class="form-label fw-semibold">Cor Visual do Cartão</label>
+                    <input asp-for="CorHex" type="color" class="form-control form-control-color rounded-3 w-100" value="#1e293b" title="Escolha a cor do cartão" />
+                    <span asp-validation-for="CorHex" class="text-danger"></span>
+                </div>
+
+                <!-- Configuração de Pontos e Milhas -->
+                <div class="card p-3 rounded-3 mb-4 bg-light border">
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="AcumulaPontos" class="form-check-input" type="checkbox" id="checkAcumulaPontos">
+                        <label class="form-check-label fw-bold" for="checkAcumulaPontos">
+                            <i class="bi bi-stars text-warning me-1"></i> Este cartão acumula pontos / milhas ou cashback?
+                        </label>
+                    </div>
+
+                    <div id="secaoPontos">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="NomeProgramaPontos" class="form-label fw-semibold"></label>
+                                <input asp-for="NomeProgramaPontos" class="form-control rounded-3" placeholder="Ex: Livelo, Esfera, Átomos, Smiles..." />
+                                <span asp-validation-for="NomeProgramaPontos" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="TipoRegra" class="form-label fw-semibold"></label>
+                                <select asp-for="TipoRegra" class="form-select rounded-3" asp-items="Html.GetEnumSelectList<TipoRegraPontos>()">
+                                </select>
+                                <span asp-validation-for="TipoRegra" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="FatorPontuacao" class="form-label fw-semibold">Pontos / Fator Multiplicador</label>
+                                <input asp-for="FatorPontuacao" type="number" step="0.1" class="form-control rounded-3" placeholder="Ex: 2.5" />
+                                <small class="text-muted">Ex: 2.5 para 2.5 pts/US$, ou 1.0 para 1 pt/R$.</small>
+                                <span asp-validation-for="FatorPontuacao" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="CotacaoDolarReferencia" class="form-label fw-semibold">Cotação Dólar Referência (R$)</label>
+                                <input asp-for="CotacaoDolarReferencia" type="number" step="0.01" class="form-control rounded-3" placeholder="Ex: 5.50" />
+                                <small class="text-muted">Usado quando a regra for por dólar gasto.</small>
+                                <span asp-validation-for="CotacaoDolarReferencia" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary rounded-3">Cancelar</a>
+                    <button type="submit" class="btn btn-custom-primary">Salvar Cartão</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const checkPontos = document.getElementById('checkAcumulaPontos');
+        const secaoPontos = document.getElementById('secaoPontos');
+
+        function togglePontos() {
+            if (checkPontos.checked) {
+                secaoPontos.style.display = 'block';
+            } else {
+                secaoPontos.style.display = 'none';
+            }
+        }
+
+        checkPontos.addEventListener('change', togglePontos);
+        togglePontos();
+    </script>
+}

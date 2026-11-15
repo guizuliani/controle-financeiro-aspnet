@@ -24,6 +24,8 @@
             --accent-green: #10b981;
             --accent-red: #ef4444;
             --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-amber: #f59e0b;
         }
 
         body {
@@ -103,6 +105,24 @@
             border-radius: 20px;
         }
 
+        .badge-pontos {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+
+        .badge-cartao {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+
         .btn-custom-primary {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: white;
@@ -130,7 +150,7 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-dark py-3">
+        <nav class="navbar navbar-expand-lg navbar-dark py-3">
             <div class="container">
                 <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index">
                     <i class="bi bi-wallet2 text-primary fs-3"></i>
@@ -140,7 +160,7 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Home" asp-action="Index">
@@ -150,6 +170,16 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Transacoes" asp-action="Index">
                                 <i class="bi bi-arrow-down-up me-1"></i> Transações
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Cartoes" asp-action="Index">
+                                <i class="bi bi-credit-card-2-front me-1"></i> Cartões
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Pontos" asp-action="Index">
+                                <i class="bi bi-stars me-1 text-warning"></i> Pontos & Milhas
                             </a>
                         </li>
                         <li class="nav-item">
@@ -192,7 +222,7 @@
 
     <footer class="py-3 text-center fs-7">
         <div class="container">
-            &copy; @DateTime.Now.Year - <strong>FinanceControl</strong> (.NET 10 MVC) | Desenvolvido com Antigravity
+            &copy; @DateTime.Now.Year - <strong>FinanceControl</strong> (.NET 10 MVC) | Módulo de Cartões & Pontos Integrado
         </div>
     </footer>
 

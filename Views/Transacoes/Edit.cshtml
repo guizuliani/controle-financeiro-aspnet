@@ -15,6 +15,11 @@
             <form asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
                 <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="NumeroParcela" />
+                <input type="hidden" asp-for="TotalParcelas" />
+                <input type="hidden" asp-for="FaturaMes" />
+                <input type="hidden" asp-for="FaturaAno" />
+                <input type="hidden" asp-for="FaturaPaga" />
 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
@@ -25,10 +30,20 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label asp-for="CategoriaId" class="form-label fw-semibold">Categoria</label>
-                        <select asp-for="CategoriaId" class="form-select rounded-3" asp-items="ViewBag.CategoriaId">
+                        <label asp-for="FormaPagamento" class="form-label fw-semibold"></label>
+                        <select asp-for="FormaPagamento" class="form-select rounded-3" id="selectFormaPagamento" asp-items="Html.GetEnumSelectList<FormaPagamento>()">
                         </select>
-                        <span asp-validation-for="CategoriaId" class="text-danger"></span>
+                        <span asp-validation-for="FormaPagamento" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div id="painelCartao" class="card p-3 rounded-3 mb-3 bg-light border">
+                    <div class="mb-0">
+                        <label asp-for="CartaoCreditoId" class="form-label fw-semibold">Cartão de Crédito</label>
+                        <select asp-for="CartaoCreditoId" class="form-select rounded-3" asp-items="ViewBag.CartaoCreditoId">
+                            <option value="">-- Sem Cartão --</option>
+                        </select>
+                        <span asp-validation-for="CartaoCreditoId" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -39,14 +54,21 @@
                 </div>
 
                 <div class="row g-3 mb-3">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label asp-for="Valor" class="form-label fw-semibold">Valor (R$)</label>
                         <input asp-for="Valor" type="number" step="0.01" class="form-control rounded-3" />
                         <span asp-validation-for="Valor" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-6">
-                        <label asp-for="Data" class="form-label fw-semibold">Data da Transação</label>
+                    <div class="col-md-4">
+                        <label asp-for="CategoriaId" class="form-label fw-semibold">Categoria</label>
+                        <select asp-for="CategoriaId" class="form-select rounded-3" asp-items="ViewBag.CategoriaId">
+                        </select>
+                        <span asp-validation-for="CategoriaId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Data" class="form-label fw-semibold">Data</label>
                         <input asp-for="Data" type="date" class="form-control rounded-3" />
                         <span asp-validation-for="Data" class="text-danger"></span>
                     </div>
@@ -66,3 +88,21 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        const selectForma = document.getElementById('selectFormaPagamento');
+        const painelCartao = document.getElementById('painelCartao');
+
+        function atualizarPainel() {
+            if (selectForma.value === "2") {
+                painelCartao.style.display = 'block';
+            } else {
+                painelCartao.style.display = 'none';
+            }
+        }
+
+        selectForma.addEventListener('change', atualizarPainel);
+        atualizarPainel();
+    </script>
+}

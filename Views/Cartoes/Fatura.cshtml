@@ -1,0 +1,191 @@
+@model ControleFinanceiro.Models.ViewModels.FaturaViewModel
+@using System.Globalization
+
+@{
+    ViewData["Title"] = $"Fatura {Model.Cartao.Nome} - {Model.Mes:D2}/{Model.Ano}";
+    var culturaBr = new CultureInfo("pt-BR");
+    var meses = new[] { "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" };
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <a asp-action="Index" class="btn btn-sm btn-outline-secondary rounded-pill">
+                <i class="bi bi-arrow-left"></i> Voltar aos Cartões
+            </a>
+            <h2 class="fw-bold mb-0">Fatura de @meses[Model.Mes - 1] / @Model.Ano</h2>
+        </div>
+        <p class="text-muted mb-0">Cartão: <strong>@Model.Cartao.Nome</strong> | Vencimento: @Model.DataVencimento.ToString("dd/MM/yyyy")</p>
+    </div>
+
+    <!-- Filtro de Mês/Ano da Fatura -->
+    <form method="get" class="d-flex align-items-center gap-2">
+        <input type="hidden" name="id" value="@Model.Cartao.Id" />
+        <select name="mes" class="form-select form-select-sm rounded-3 shadow-sm">
+            @for (int i = 1; i <= 12; i++)
+            {
+                <option value="@i" selected="@(Model.Mes == i)">@meses[i - 1]</option>
+            }
+        </select>
+
+        <select name="ano" class="form-select form-select-sm rounded-3 shadow-sm">
+            @for (int a = DateTime.Today.Year - 1; a <= DateTime.Today.Year + 2; a++)
+            {
+                <option value="@a" selected="@(Model.Ano == a)">@a</option>
+            }
+        </select>
+
+        <button type="submit" class="btn btn-sm btn-outline-primary rounded-3">
+            <i class="bi bi-funnel-fill"></i> Filtrar
+        </button>
+    </form>
+</div>
+
+<!-- Resumo da Fatura -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card-custom stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted fw-semibold">Valor da Fatura</span>
+                <div class="icon-box" style="background-color: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                    <i class="bi bi-receipt"></i>
+                </div>
+            </div>
+            <h3 class="fw-bold text-danger mb-0">@Model.TotalFatura.ToString("C", culturaBr)</h3>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-custom stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted fw-semibold">Pontos / Milhas Nesta Fatura</span>
+                <div class="icon-box" style="background-color: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                    <i class="bi bi-stars"></i>
+                </div>
+            </div>
+            <h3 class="fw-bold text-warning mb-0">@Model.TotalPontos.ToString("N0", culturaBr) pts</h3>
+            <small class="text-muted">@(Model.Cartao.AcumulaPontos ? Model.Cartao.NomeProgramaPontos : "Sem programa")</small>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-custom stat-card d-flex flex-column justify-content-between">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted fw-semibold">Status do Pagamento</span>
+                @if (Model.FaturaPaga)
+                {
+                    <span class="badge bg-success px-3 py-2 rounded-pill"><i class="bi bi-check-circle-fill me-1"></i> Fatura Paga</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger px-3 py-2 rounded-pill"><i class="bi bi-clock-history me-1"></i> Fatura em Aberto</span>
+                }
+            </div>
+
+            @if (!Model.FaturaPaga && Model.Transacoes.Any())
+            {
+                <form asp-action="PagarFatura" method="post" onsubmit="return confirm('Confirma o pagamento desta fatura? Isso registrará uma despesa no extrato da sua conta bancária.');">
+                    <input type="hidden" name="id" value="@Model.Cartao.Id" />
+                    <input type="hidden" name="mes" value="@Model.Mes" />
+                    <input type="hidden" name="ano" value="@Model.Ano" />
+                    <button type="submit" class="btn btn-success w-100 rounded-3 fw-semibold">
+                        <i class="bi bi-cash-coin me-1"></i> Pagar Fatura Agora
+                    </button>
+                </form>
+            }
+            else if (Model.FaturaPaga)
+            {
+                <button class="btn btn-secondary w-100 rounded-3" disabled>
+                    <i class="bi bi-check-all me-1"></i> Fatura Liquidada
+                </button>
+            }
+            else
+            {
+                <span class="text-muted fs-7">Nenhuma despesa para pagamento.</span>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Lançamentos na Fatura -->
+<div class="card-custom p-4">
+    <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+        <i class="bi bi-list-check text-primary"></i> Lançamentos desta Fatura (@Model.Transacoes.Count)
+    </h5>
+
+    @if (Model.Transacoes.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Data da Compra</th>
+                        <th>Descrição</th>
+                        <th>Parcela</th>
+                        <th>Categoria</th>
+                        <th class="text-end">Pontos Gerados</th>
+                        <th class="text-end">Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in Model.Transacoes)
+                    {
+                        <tr>
+                            <td class="text-muted fs-7">@t.Data.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <div class="fw-bold">@t.Descricao</div>
+                                @if (!string.IsNullOrEmpty(t.Observacao))
+                                {
+                                    <small class="text-muted">@t.Observacao</small>
+                                }
+                            </td>
+                            <td>
+                                @if (t.TotalParcelas > 1)
+                                {
+                                    <span class="badge bg-secondary">@t.NumeroParcela / @t.TotalParcelas</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-light text-dark border">À vista</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill" style="background-color: @(t.Categoria?.CorHex ?? "#6c757d"); color: white;">
+                                    <i class="bi @(t.Categoria?.Icone ?? "bi-tag") me-1"></i> @(t.Categoria?.Nome ?? "Sem categoria")
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                @if (t.PontosGerados > 0)
+                                {
+                                    <span class="badge-pontos">+@t.PontosGerados.ToString("N1", culturaBr) pts</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted fs-7">-</span>
+                                }
+                            </td>
+                            <td class="text-end fw-bold text-danger">
+                                @t.Valor.ToString("C", culturaBr)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot class="table-light">
+                    <tr>
+                        <th colspan="4" class="fw-bold">TOTAL</th>
+                        <th class="text-end text-warning fw-bold">+@Model.TotalPontos.ToString("N1", culturaBr) pts</th>
+                        <th class="text-end text-danger fw-bold fs-6">@Model.TotalFatura.ToString("C", culturaBr)</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-inbox fs-1 mb-2"></i>
+            <h5>Fatura vazia</h5>
+            <p class="mb-0">Não há lançamentos de cartão registrados para o período de @meses[Model.Mes - 1]/@Model.Ano.</p>
+        </div>
+    }
+</div>
