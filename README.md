@@ -6,29 +6,44 @@
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 ![Bootstrap 5](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
 
-Aplicação Web moderna para **gestão e controle de finanças pessoais/empresariais**, desenvolvida em **ASP.NET Core MVC com .NET 10**.
+Aplicação Web moderna para **gestão financeira pessoal/empresarial**, desenvolvida em **ASP.NET Core MVC com .NET 10**, agora com suporte completo a **Cartões de Crédito**, **Controle de Faturas**, **Compras Parceladas** e **Sistema Configurável de Pontos e Milhas**.
 
 ---
 
 ## ✨ Funcionalidades Principais
 
-* **📊 Dashboard Financeiro**:
-  * Resumo dinâmico de **Total de Receitas**, **Total de Despesas** e **Saldo Final** do mês.
-  * Gráfico de rosca (*doughnut*) interativo via **Chart.js** mapeando os gastos por categoria.
+* **📊 Dashboard Financeiro Unificado**:
+  * Visão consolidada de **Receitas em Conta**, **Despesas em Conta**, **Saldo em Conta**, **Faturas do Mês** e **Pontos/Milhas Acumulados**.
+  * Barras de progresso com **Uso de Limite** de cada cartão cadastrado.
+  * Gráfico interativo via **Chart.js** mapeando os gastos por categoria.
   * Tabela de lançamentos recentes e filtros práticos de **Mês e Ano**.
 
-* **💸 Gestão de Transações**:
-  * Registro completo de **Entradas (Receitas)** e **Saídas (Despesas)**.
-  * Filtros avançados por busca textual (descrição), mês, ano, tipo e categoria.
-  * Operações completas de Criação, Edição e Exclusão (CRUD).
+* **💳 Gestão de Cartões de Crédito & Faturas**:
+  * Cadastro de cartões com bandeira, cor visual, limite total, **dia de fechamento** e **dia de vencimento**.
+  * Cálculo dinâmico do "Melhor dia de compra" (virada de fatura automática conforme o dia de fechamento).
+  * Visualização detalhada da **Fatura do Mês** (compras, parcelas 1/N, total da fatura e total de pontos gerados).
+  * Botão de **Pagar Fatura**: quita os lançamentos da fatura e gera a despesa consolidada no extrato da sua conta bancária.
+
+* **⭐ Sistema Configurável de Pontos e Milhas**:
+  * Definição de regras de pontuação por cartão:
+    * **Por Dólar Gasto (USD)** (ex: *2.5 pontos por US$ 1*, com cotação de referência).
+    * **Por Real Gasto (BRL)** (ex: *1 ponto por R$ 1 gasto*).
+    * **Cashback (%)** (ex: *1% ou 1.5% de volta*).
+  * **Cálculo automático de pontos** gerados em cada compra ou parcela.
+  * **Painel de Pontos**: Saldo líquido por programa (*Livelo, Esfera, C6 Átomos, Smiles, etc.*), extrato de acúmulo e registro de **Resgate/Transferência** de pontos.
+
+* **💸 Gestão de Transações & Parcelamento**:
+  * Registro de transações em **Conta Corrente** ou **Cartão de Crédito**.
+  * Suporte a compras parceladas (1x até 48x) com alocação automática nas faturas dos meses subsequentes.
+  * Filtros avançados por busca textual, mês, ano, tipo, forma de pagamento e cartão.
 
 * **🏷️ Gestão de Categorias**:
   * Cadastro de categorias personalizadas com identificação de cores em hexadecimal e ícones (Bootstrap Icons).
-  * Validação para prevenção de exclusão acidental de categorias com transações vinculadas.
+  * Validação que impede exclusão acidental de categorias com transações vinculadas.
 
 * **💾 Persistência com Entity Framework Core 10**:
   * Banco de dados local portátil **SQLite** (`controle_financeiro.db`).
-  * Inicialização e *seeding* automático das categorias padrão na primeira execução.
+  * Inicialização e *seeding* automático de categorias e cartões exemplo na primeira execução.
 
 ---
 
@@ -65,7 +80,8 @@ Aplicação Web moderna para **gestão e controle de finanças pessoais/empresar
    ```
 
 3. **Acessar no navegador**:
-   Abra o navegador no endereço indicado no terminal (ex: `https://localhost:7050` ou `http://localhost:5050`).
+   * HTTPS: `https://localhost:7050`
+   * HTTP: `http://localhost:5050`
 
 ---
 
@@ -73,23 +89,28 @@ Aplicação Web moderna para **gestão e controle de finanças pessoais/empresar
 
 ```text
 ├── Controllers/
-│   ├── HomeController.cs        # Dashboard e estatísticas financeiras
-│   ├── TransacoesController.cs  # CRUD e filtros de receitas/despesas
+│   ├── HomeController.cs        # Dashboard unificado e resumo de cartões/pontos
+│   ├── CartoesController.cs     # CRUD de cartões, faturas e liquidação
+│   ├── PontosController.cs      # Extrato de pontos, milhas e resgates
+│   ├── TransacoesController.cs  # CRUD, parcelamento e cálculo de pontuação
 │   └── CategoriasController.cs  # CRUD e validações de categorias
 ├── Models/
-│   ├── Categoria.cs             # Modelo de dados de Categorias
-│   ├── Transacao.cs             # Modelo de dados de Lançamentos
-│   └── ViewModels/              # ViewModels para transporte de dados da Dashboard
+│   ├── CartaoCredito.cs         # Modelo de cartão com regras de pontuação
+│   ├── ResgatePontos.cs         # Histórico de transferências/resgates de pontos
+│   ├── Transacao.cs             # Transações com suporte a cartão, parcelas e pontos
+│   ├── Categoria.cs             # Categorias de gastos/receitas
+│   ├── Enums/                   # TipoTransacao, FormaPagamento, TipoRegraPontos
+│   └── ViewModels/              # DashboardViewModel, FaturaViewModel, PontosViewModel
 ├── Data/
-│   └── AppDbContext.cs          # Mapeamento do Entity Framework e Seed Data
-├── Views/                       # Páginas Razor modernas com Bootstrap 5
+│   └── AppDbContext.cs          # Mapeamento do EF Core e Seed Data
+├── Views/                       # Views Razor modernas (Cartões, Pontos, Transações)
 ├── wwwroot/                     # Ativos estáticos (CSS, JS, Favicon)
 ├── appsettings.json             # Configuração de conexão do SQLite
-└── Program.cs                   # Configuração de serviços e pipeline HTTP
+└── Program.cs                   # Inicialização de serviços e pipeline HTTP
 ```
 
 ---
 
 ## 📄 Licença
 
-Este projeto foi desenvolvido como demonstração prática e está livre para uso, estudos e modificações.
+Este projeto está livre para uso, estudos e modificações.
