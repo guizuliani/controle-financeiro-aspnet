@@ -4,40 +4,39 @@
     ViewData["Title"] = "Categorias";
 }
 
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
     <div>
-        <h2 class="fw-bold mb-1"><i class="bi bi-tags text-primary"></i> Categorias</h2>
-        <p class="text-muted mb-0">Gerencie as categorias de receitas e despesas.</p>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+            <i class="bi bi-tags text-blue-600"></i> Categorias
+        </h1>
+        <p class="text-slate-500 text-sm mt-0.5">Gerencie as categorias de receitas e despesas.</p>
     </div>
     <div>
-        <a asp-action="Create" class="btn btn-custom-primary d-flex align-items-center gap-2">
-            <i class="bi bi-plus-circle-fill"></i> Nova Categoria
+        <a asp-action="Create" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-4 py-2.5 inline-flex items-center gap-2 shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5">
+            <i class="bi bi-plus-circle-fill"></i>
+            <span>Nova Categoria</span>
         </a>
     </div>
 </div>
 
-<div class="row g-3">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     @foreach (var item in Model)
     {
-        <div class="col-md-4 col-lg-3">
-            <div class="card-custom p-3 h-100 d-flex flex-column justify-content-between">
-                <div>
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="badge rounded-pill px-3 py-2" style="background-color: @item.CorHex; color: white;">
-                            <i class="bi @item.Icone me-1"></i> @item.Nome
-                        </span>
-                        <small class="text-muted fw-semibold">@item.Transacoes.Count transação(ões)</small>
-                    </div>
-                </div>
+        <div class="card-fintech p-5 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-3">
+                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold text-white shadow-sm" style="background-color: @item.CorHex;">
+                    <i class="bi @item.Icone me-1.5"></i> @item.Nome
+                </span>
+                <span class="text-xs text-slate-400 font-medium">@item.Transacoes.Count lançamentos</span>
+            </div>
 
-                <div class="d-flex justify-content-end gap-1 mt-3">
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="Editar">
-                        <i class="bi bi-pencil-fill"></i> Editar
-                    </a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Excluir">
-                        <i class="bi bi-trash-fill"></i> Excluir
-                    </a>
-                </div>
+            <div class="flex items-center justify-end gap-2 border-t border-slate-100 pt-3 mt-2">
+                <a asp-action="Edit" asp-route-id="@item.Id" class="py-1 px-3 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors inline-flex items-center gap-1">
+                    <i class="bi bi-pencil-fill"></i> Editar
+                </a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="py-1 px-3 text-xs font-medium text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors inline-flex items-center gap-1">
+                    <i class="bi bi-trash-fill"></i> Excluir
+                </a>
             </div>
         </div>
     }

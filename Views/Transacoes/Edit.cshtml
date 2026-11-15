@@ -5,87 +5,93 @@
     ViewData["Title"] = "Editar Transação";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card-custom p-4">
-            <h4 class="fw-bold mb-4">
-                <i class="bi bi-pencil-square text-primary"></i> Editar Transação
-            </h4>
-
-            <form asp-action="Edit">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-                <input type="hidden" asp-for="Id" />
-                <input type="hidden" asp-for="NumeroParcela" />
-                <input type="hidden" asp-for="TotalParcelas" />
-                <input type="hidden" asp-for="FaturaMes" />
-                <input type="hidden" asp-for="FaturaAno" />
-                <input type="hidden" asp-for="FaturaPaga" />
-
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label asp-for="Tipo" class="form-label fw-semibold"></label>
-                        <select asp-for="Tipo" class="form-select rounded-3" asp-items="Html.GetEnumSelectList<TipoTransacao>()">
-                        </select>
-                        <span asp-validation-for="Tipo" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label asp-for="FormaPagamento" class="form-label fw-semibold"></label>
-                        <select asp-for="FormaPagamento" class="form-select rounded-3" id="selectFormaPagamento" asp-items="Html.GetEnumSelectList<FormaPagamento>()">
-                        </select>
-                        <span asp-validation-for="FormaPagamento" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div id="painelCartao" class="card p-3 rounded-3 mb-3 bg-light border">
-                    <div class="mb-0">
-                        <label asp-for="CartaoCreditoId" class="form-label fw-semibold">Cartão de Crédito</label>
-                        <select asp-for="CartaoCreditoId" class="form-select rounded-3" asp-items="ViewBag.CartaoCreditoId">
-                            <option value="">-- Sem Cartão --</option>
-                        </select>
-                        <span asp-validation-for="CartaoCreditoId" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Descricao" class="form-label fw-semibold">Descrição</label>
-                    <input asp-for="Descricao" class="form-control rounded-3" />
-                    <span asp-validation-for="Descricao" class="text-danger"></span>
-                </div>
-
-                <div class="row g-3 mb-3">
-                    <div class="col-md-4">
-                        <label asp-for="Valor" class="form-label fw-semibold">Valor (R$)</label>
-                        <input asp-for="Valor" type="number" step="0.01" class="form-control rounded-3" />
-                        <span asp-validation-for="Valor" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label asp-for="CategoriaId" class="form-label fw-semibold">Categoria</label>
-                        <select asp-for="CategoriaId" class="form-select rounded-3" asp-items="ViewBag.CategoriaId">
-                        </select>
-                        <span asp-validation-for="CategoriaId" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label asp-for="Data" class="form-label fw-semibold">Data</label>
-                        <input asp-for="Data" type="date" class="form-control rounded-3" />
-                        <span asp-validation-for="Data" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <label asp-for="Observacao" class="form-label fw-semibold">Observações</label>
-                    <textarea asp-for="Observacao" class="form-control rounded-3" rows="3"></textarea>
-                    <span asp-validation-for="Observacao" class="text-danger"></span>
-                </div>
-
-                <div class="d-flex justify-content-end gap-2">
-                    <a asp-action="Index" class="btn btn-outline-secondary rounded-3">Cancelar</a>
-                    <button type="submit" class="btn btn-primary rounded-3">Salvar Alterações</button>
-                </div>
-            </form>
+<div class="max-w-2xl mx-auto">
+    <div class="card-fintech p-6 sm:p-8">
+        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+                <i class="bi bi-pencil-square"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-slate-900">Editar Transação</h1>
+                <p class="text-xs text-slate-500">Atualize os dados deste lançamento.</p>
+            </div>
         </div>
+
+        <form asp-action="Edit" class="space-y-4">
+            <div asp-validation-summary="ModelOnly" class="text-rose-600 text-sm mb-4"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="NumeroParcela" />
+            <input type="hidden" asp-for="TotalParcelas" />
+            <input type="hidden" asp-for="FaturaMes" />
+            <input type="hidden" asp-for="FaturaAno" />
+            <input type="hidden" asp-for="FaturaPaga" />
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label asp-for="Tipo" class="block mb-2 text-sm font-medium text-slate-700">Tipo de Lançamento</label>
+                    <select asp-for="Tipo" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" asp-items="Html.GetEnumSelectList<TipoTransacao>()">
+                    </select>
+                    <span asp-validation-for="Tipo" class="text-rose-500 text-xs mt-1 block"></span>
+                </div>
+
+                <div>
+                    <label asp-for="FormaPagamento" class="block mb-2 text-sm font-medium text-slate-700">Forma de Pagamento</label>
+                    <select asp-for="FormaPagamento" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="selectFormaPagamento" asp-items="Html.GetEnumSelectList<FormaPagamento>()">
+                    </select>
+                    <span asp-validation-for="FormaPagamento" class="text-rose-500 text-xs mt-1 block"></span>
+                </div>
+            </div>
+
+            <div id="painelCartao" class="p-4 rounded-xl bg-blue-50/70 border border-blue-200">
+                <label asp-for="CartaoCreditoId" class="block mb-1 text-xs font-semibold text-slate-700">Cartão de Crédito</label>
+                <select asp-for="CartaoCreditoId" class="bg-white border border-blue-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" asp-items="ViewBag.CartaoCreditoId">
+                    <option value="">-- Sem Cartão --</option>
+                </select>
+                <span asp-validation-for="CartaoCreditoId" class="text-rose-500 text-xs mt-1 block"></span>
+            </div>
+
+            <div>
+                <label asp-for="Descricao" class="block mb-2 text-sm font-medium text-slate-700">Descrição</label>
+                <input asp-for="Descricao" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                <span asp-validation-for="Descricao" class="text-rose-500 text-xs mt-1 block"></span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label asp-for="Valor" class="block mb-2 text-sm font-medium text-slate-700">Valor (R$)</label>
+                    <input asp-for="Valor" type="number" step="0.01" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                    <span asp-validation-for="Valor" class="text-rose-500 text-xs mt-1 block"></span>
+                </div>
+
+                <div>
+                    <label asp-for="CategoriaId" class="block mb-2 text-sm font-medium text-slate-700">Categoria</label>
+                    <select asp-for="CategoriaId" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" asp-items="ViewBag.CategoriaId">
+                    </select>
+                    <span asp-validation-for="CategoriaId" class="text-rose-500 text-xs mt-1 block"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Data" class="block mb-2 text-sm font-medium text-slate-700">Data</label>
+                    <input asp-for="Data" type="date" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                    <span asp-validation-for="Data" class="text-rose-500 text-xs mt-1 block"></span>
+                </div>
+            </div>
+
+            <div>
+                <label asp-for="Observacao" class="block mb-2 text-sm font-medium text-slate-700">Observações</label>
+                <textarea asp-for="Observacao" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" rows="3"></textarea>
+                <span asp-validation-for="Observacao" class="text-rose-500 text-xs mt-1 block"></span>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                <a asp-action="Index" class="py-2.5 px-5 text-sm font-medium text-slate-600 bg-white rounded-xl border border-slate-300 hover:bg-slate-50 transition-colors">
+                    Cancelar
+                </a>
+                <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-6 py-2.5 shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5">
+                    Salvar Alterações
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -96,9 +102,9 @@
 
         function atualizarPainel() {
             if (selectForma.value === "2") {
-                painelCartao.style.display = 'block';
+                painelCartao.classList.remove('hidden');
             } else {
-                painelCartao.style.display = 'none';
+                painelCartao.classList.add('hidden');
             }
         }
 

@@ -8,67 +8,72 @@
     var meses = new[] { "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" };
 }
 
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
     <div>
-        <h2 class="fw-bold mb-1"><i class="bi bi-arrow-down-up text-primary"></i> Transações</h2>
-        <p class="text-muted mb-0">Gerencie todas as suas entradas, saídas, compras no cartão e parcelamentos.</p>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+            <i class="bi bi-arrow-down-up text-blue-600"></i> Transações
+        </h1>
+        <p class="text-slate-500 text-sm mt-0.5">Gerencie suas entradas, saídas, compras no cartão e parcelamentos.</p>
     </div>
     <div>
-        <a asp-action="Create" class="btn btn-custom-primary d-flex align-items-center gap-2">
-            <i class="bi bi-plus-circle-fill"></i> Nova Transação
+        <a asp-action="Create" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-4 py-2.5 inline-flex items-center gap-2 shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5">
+            <i class="bi bi-plus-circle-fill"></i>
+            <span>Nova Transação</span>
         </a>
     </div>
 </div>
 
 <!-- Filtros de Busca -->
-<div class="card-custom p-4 mb-4">
-    <form method="get" class="row g-3 align-items-end">
-        <div class="col-md-3">
-            <label class="form-label fw-semibold fs-7">Buscar Descrição</label>
-            <input type="text" name="busca" value="@ViewBag.Busca" class="form-control form-control-sm rounded-3" placeholder="Ex: Mercado, Salário..." />
+<div class="card-fintech p-5 mb-6">
+    <form method="get" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div>
+                <label class="block mb-1.5 text-xs font-semibold text-slate-600">Buscar Descrição</label>
+                <input type="text" name="busca" value="@ViewBag.Busca" class="bg-slate-50 border border-slate-300 text-slate-900 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: Mercado, Salário..." />
+            </div>
+
+            <div>
+                <label class="block mb-1.5 text-xs font-semibold text-slate-600">Mês</label>
+                <select name="mes" class="bg-slate-50 border border-slate-300 text-slate-900 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i" selected="@(ViewBag.Mes == i)">@meses[i - 1]</option>
+                    }
+                </select>
+            </div>
+
+            <div>
+                <label class="block mb-1.5 text-xs font-semibold text-slate-600">Ano</label>
+                <select name="ano" class="bg-slate-50 border border-slate-300 text-slate-900 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    @for (int a = DateTime.Today.Year - 2; a <= DateTime.Today.Year + 2; a++)
+                    {
+                        <option value="@a" selected="@(ViewBag.Ano == a)">@a</option>
+                    }
+                </select>
+            </div>
+
+            <div>
+                <label class="block mb-1.5 text-xs font-semibold text-slate-600">Pagamento</label>
+                <select name="formaPagamento" class="bg-slate-50 border border-slate-300 text-slate-900 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <option value="">Todos</option>
+                    <option value="1" selected="@(ViewBag.FormaPagamento != null && (int)ViewBag.FormaPagamento == 1)">Conta Corrente</option>
+                    <option value="2" selected="@(ViewBag.FormaPagamento != null && (int)ViewBag.FormaPagamento == 2)">Cartão de Crédito</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block mb-1.5 text-xs font-semibold text-slate-600">Cartão</label>
+                <select name="cartaoId" class="bg-slate-50 border border-slate-300 text-slate-900 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" asp-items="ViewBag.Cartoes">
+                    <option value="">Todos os Cartões</option>
+                </select>
+            </div>
         </div>
 
-        <div class="col-md-2">
-            <label class="form-label fw-semibold fs-7">Mês</label>
-            <select name="mes" class="form-select form-select-sm rounded-3">
-                @for (int i = 1; i <= 12; i++)
-                {
-                    <option value="@i" selected="@(ViewBag.Mes == i)">@meses[i - 1]</option>
-                }
-            </select>
-        </div>
-
-        <div class="col-md-2">
-            <label class="form-label fw-semibold fs-7">Ano</label>
-            <select name="ano" class="form-select form-select-sm rounded-3">
-                @for (int a = DateTime.Today.Year - 2; a <= DateTime.Today.Year + 2; a++)
-                {
-                    <option value="@a" selected="@(ViewBag.Ano == a)">@a</option>
-                }
-            </select>
-        </div>
-
-        <div class="col-md-2">
-            <label class="form-label fw-semibold fs-7">Pagamento</label>
-            <select name="formaPagamento" class="form-select form-select-sm rounded-3">
-                <option value="">Todos</option>
-                <option value="1" selected="@(ViewBag.FormaPagamento != null && (int)ViewBag.FormaPagamento == 1)">Conta Corrente</option>
-                <option value="2" selected="@(ViewBag.FormaPagamento != null && (int)ViewBag.FormaPagamento == 2)">Cartão de Crédito</option>
-            </select>
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label fw-semibold fs-7">Cartão</label>
-            <select name="cartaoId" class="form-select form-select-sm rounded-3" asp-items="ViewBag.Cartoes">
-                <option value="">Todos os Cartões</option>
-            </select>
-        </div>
-
-        <div class="col-12 d-flex justify-content-end gap-2 pt-2">
-            <a asp-action="Index" class="btn btn-sm btn-outline-secondary rounded-3">
+        <div class="flex justify-end items-center gap-3 pt-3 border-t border-slate-100">
+            <a asp-action="Index" class="py-2 px-4 text-xs font-medium text-slate-600 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors inline-flex items-center gap-1">
                 <i class="bi bi-x-circle"></i> Limpar Filtros
             </a>
-            <button type="submit" class="btn btn-sm btn-primary rounded-3 px-4">
+            <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-xl text-xs px-5 py-2 inline-flex items-center gap-1 transition-colors">
                 <i class="bi bi-search"></i> Filtrar
             </button>
         </div>
@@ -76,87 +81,91 @@
 </div>
 
 <!-- Tabela de Transações -->
-<div class="card-custom p-4">
+<div class="card-fintech p-6">
     @if (Model.Any())
     {
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-slate-600">
+                <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200">
                     <tr>
-                        <th>Data</th>
-                        <th>Descrição</th>
-                        <th>Categoria</th>
-                        <th>Pagamento / Cartão</th>
-                        <th>Parcela</th>
-                        <th>Pontos</th>
-                        <th class="text-end">Valor</th>
-                        <th class="text-center">Ações</th>
+                        <th scope="col" class="px-4 py-3">Data</th>
+                        <th scope="col" class="px-4 py-3">Descrição</th>
+                        <th scope="col" class="px-4 py-3">Categoria</th>
+                        <th scope="col" class="px-4 py-3">Pagamento / Cartão</th>
+                        <th scope="col" class="px-4 py-3">Parcela</th>
+                        <th scope="col" class="px-4 py-3 text-right">Pontos</th>
+                        <th scope="col" class="px-4 py-3 text-right">Valor</th>
+                        <th scope="col" class="px-4 py-3 text-center">Ações</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-slate-100">
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td class="fw-semibold text-secondary fs-7">@item.Data.ToString("dd/MM/yyyy")</td>
-                            <td>
-                                <div class="fw-bold">@item.Descricao</div>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-4 py-3 text-xs text-slate-500 font-medium">@item.Data.ToString("dd/MM/yyyy")</td>
+                            <td class="px-4 py-3">
+                                <div class="font-bold text-slate-800">@item.Descricao</div>
                                 @if (!string.IsNullOrEmpty(item.Observacao))
                                 {
-                                    <small class="text-muted d-block">@item.Observacao</small>
+                                    <small class="text-slate-400 block font-normal text-xs">@item.Observacao</small>
                                 }
                             </td>
-                            <td>
-                                <span class="badge rounded-pill" style="background-color: @(item.Categoria?.CorHex ?? "#6c757d"); color: white;">
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white" style="background-color: @(item.Categoria?.CorHex ?? "#6c757d");">
                                     <i class="bi @(item.Categoria?.Icone ?? "bi-tag") me-1"></i> @(item.Categoria?.Nome ?? "Sem categoria")
                                 </span>
                             </td>
-                            <td>
+                            <td class="px-4 py-3">
                                 @if (item.FormaPagamento == FormaPagamento.CartaoCredito)
                                 {
-                                    <span class="badge-cartao">
-                                        <i class="bi bi-credit-card-fill me-1"></i> @(item.CartaoCredito?.Nome ?? "Cartão")
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-blue-100 text-blue-800">
+                                        <i class="bi bi-credit-card-fill mr-1"></i> @(item.CartaoCredito?.Nome ?? "Cartão")
                                     </span>
                                     @if (item.FaturaMes.HasValue)
                                     {
-                                        <small class="text-muted d-block fs-8">Fatura @item.FaturaMes:D2/@item.FaturaAno</small>
+                                        <small class="text-slate-400 block text-[11px]">Fatura @item.FaturaMes:D2/@item.FaturaAno</small>
                                     }
                                 }
                                 else
                                 {
-                                    <span class="badge bg-light text-dark border">
-                                        <i class="bi bi-bank me-1"></i> Conta Corrente
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">
+                                        <i class="bi bi-bank mr-1"></i> Conta Corrente
                                     </span>
                                 }
                             </td>
-                            <td>
+                            <td class="px-4 py-3">
                                 @if (item.TotalParcelas > 1)
                                 {
-                                    <span class="badge bg-secondary">@item.NumeroParcela/@item.TotalParcelas</span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                                        @item.NumeroParcela/@item.TotalParcelas
+                                    </span>
                                 }
                                 else
                                 {
-                                    <span class="text-muted fs-7">À vista</span>
+                                    <span class="text-xs text-slate-400">À vista</span>
                                 }
                             </td>
-                            <td>
+                            <td class="px-4 py-3 text-right">
                                 @if (item.PontosGerados > 0)
                                 {
-                                    <span class="badge-pontos">+@item.PontosGerados.ToString("N1", culturaBr)</span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800">
+                                        +@item.PontosGerados.ToString("N1", culturaBr)
+                                    </span>
                                 }
                                 else
                                 {
-                                    <span class="text-muted fs-7">-</span>
+                                    <span class="text-slate-400 text-xs">-</span>
                                 }
                             </td>
-                            <td class="text-end fw-bold @(item.Tipo == TipoTransacao.Receita ? "text-success" : "text-danger") fs-6">
+                            <td class="px-4 py-3 text-right font-bold @(item.Tipo == TipoTransacao.Receita ? "text-emerald-600" : "text-rose-600")">
                                 @(item.Tipo == TipoTransacao.Receita ? "+" : "-") @item.Valor.ToString("C", culturaBr)
                             </td>
-                            <td class="text-center">
-                                <div class="btn-group btn-group-sm">
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary" title="Editar">
+                            <td class="px-4 py-3 text-center">
+                                <div class="inline-flex rounded-lg shadow-sm">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="px-2.5 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-200 rounded-s-lg hover:bg-slate-100 hover:text-blue-700 transition-colors" title="Editar">
                                         <i class="bi bi-pencil-fill"></i>
                                     </a>
-                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger" title="Excluir">
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="px-2.5 py-1.5 text-xs font-medium text-slate-700 bg-white border border-s-0 border-slate-200 rounded-e-lg hover:bg-rose-50 hover:text-rose-700 transition-colors" title="Excluir">
                                         <i class="bi bi-trash-fill"></i>
                                     </a>
                                 </div>
@@ -169,10 +178,10 @@
     }
     else
     {
-        <div class="text-center py-5 text-muted">
-            <i class="bi bi-inbox fs-1 mb-2"></i>
-            <h5>Nenhuma transação encontrada.</h5>
-            <p class="mb-0">Ajuste os filtros ou cadastre um novo lançamento.</p>
+        <div class="text-center py-12 text-slate-400">
+            <i class="bi bi-inbox text-4xl mb-2 block"></i>
+            <h3 class="font-bold text-slate-700">Nenhuma transação encontrada</h3>
+            <p class="text-sm">Ajuste os filtros ou cadastre um novo lançamento.</p>
         </div>
     }
 </div>

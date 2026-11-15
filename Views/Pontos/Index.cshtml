@@ -6,50 +6,56 @@
     var culturaBr = new CultureInfo("pt-BR");
 }
 
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
     <div>
-        <h2 class="fw-bold mb-1"><i class="bi bi-stars text-warning"></i> Painel de Pontos & Milhas</h2>
-        <p class="text-muted mb-0">Monitore sua pontuação acumulada por cartão, extrato e resgates.</p>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+            <i class="bi bi-stars text-amber-500"></i> Painel de Pontos & Milhas
+        </h1>
+        <p class="text-slate-500 text-sm mt-0.5">Monitore sua pontuação acumulada por cartão, extrato e resgates.</p>
     </div>
     <div>
-        <a asp-action="Resgatar" class="btn btn-warning text-dark fw-bold rounded-3 shadow-sm d-flex align-items-center gap-2">
-            <i class="bi bi-box-arrow-up-right"></i> Registrar Resgate / Baixa
+        <a asp-action="Resgatar" class="text-slate-900 bg-amber-400 hover:bg-amber-500 focus:ring-4 focus:ring-amber-200 font-bold rounded-xl text-sm px-4 py-2.5 inline-flex items-center gap-2 shadow-lg shadow-amber-400/20 transition-all hover:-translate-y-0.5">
+            <i class="bi bi-box-arrow-up-right"></i>
+            <span>Registrar Resgate / Baixa</span>
         </a>
     </div>
 </div>
 
 <!-- Cards de Programas -->
-<div class="row g-4 mb-4">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
     @if (Model.Programas.Any())
     {
         @foreach (var prog in Model.Programas)
         {
-            <div class="col-md-6 col-lg-4">
-                <div class="card-custom p-4 h-100 position-relative overflow-hidden">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="card-fintech p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
                         <div>
-                            <span class="badge rounded-pill px-3 py-1 mb-2 text-white" style="background-color: @prog.CorHex;">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold text-white mb-2" style="background-color: @prog.CorHex;">
                                 @prog.CartaoNome
                             </span>
-                            <h5 class="fw-bold mb-0">@prog.NomePrograma</h5>
+                            <h2 class="text-lg font-bold text-slate-900">@prog.NomePrograma</h2>
                         </div>
-                        <div class="icon-box" style="background-color: rgba(245, 158, 11, 0.15); color: #f59e0b; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                            <i class="bi bi-star-fill fs-5"></i>
+                        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center text-xl">
+                            <i class="bi bi-star-fill"></i>
                         </div>
                     </div>
 
-                    <div class="my-3">
-                        <small class="text-muted d-block">Saldo Disponível:</small>
-                        <h2 class="fw-bold text-warning mb-0">@prog.SaldoAtual.ToString("N0", culturaBr) <span class="fs-6 text-muted">pts</span></h2>
+                    <div class="my-4">
+                        <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold block">Saldo Disponível</span>
+                        <h3 class="text-3xl font-extrabold text-amber-500 tracking-tight mt-1">
+                            @prog.SaldoAtual.ToString("N0", culturaBr) <span class="text-sm font-normal text-slate-400">pts</span>
+                        </h3>
                     </div>
+                </div>
 
-                    <div class="d-flex justify-content-between fs-7 text-muted border-top pt-2">
-                        <span>Total Ganho: <strong class="text-success">+@prog.TotalAcumulado.ToString("N0", culturaBr)</strong></span>
-                        <span>Resgatado: <strong class="text-danger">-@prog.TotalResgatado.ToString("N0", culturaBr)</strong></span>
+                <div class="border-t border-slate-100 pt-3 space-y-2">
+                    <div class="flex justify-between text-xs text-slate-500">
+                        <span>Total Ganho: <strong class="text-emerald-600">+@prog.TotalAcumulado.ToString("N0", culturaBr)</strong></span>
+                        <span>Resgatado: <strong class="text-rose-600">-@prog.TotalResgatado.ToString("N0", culturaBr)</strong></span>
                     </div>
-
-                    <div class="mt-2 text-muted fs-8">
-                        <i class="bi bi-gear-fill me-1"></i> Regra: @prog.RegraDescricao
+                    <div class="text-[11px] text-slate-400 flex items-center gap-1">
+                        <i class="bi bi-gear-fill"></i> @prog.RegraDescricao
                     </div>
                 </div>
             </div>
@@ -57,52 +63,54 @@
     }
     else
     {
-        <div class="col-12">
-            <div class="card-custom p-4 text-center text-muted">
-                <i class="bi bi-stars fs-1 mb-2 text-warning"></i>
-                <h5>Nenhum cartão com programa de pontos ativado.</h5>
-                <p>Acesse a aba <strong>Cartões</strong> e ative a opção "Acumula Pontos" no seu cartão preferido!</p>
-                <div>
-                    <a asp-controller="Cartoes" asp-action="Index" class="btn btn-outline-primary">Ver Meus Cartões</a>
-                </div>
+        <div class="col-span-full">
+            <div class="card-fintech p-10 text-center text-slate-400">
+                <i class="bi bi-stars text-5xl mb-3 text-amber-400 block"></i>
+                <h3 class="font-bold text-slate-700 mb-1">Nenhum cartão com programa de pontos ativado</h3>
+                <p class="text-sm text-slate-500 mb-4">Acesse a aba Cartões e ative a opção "Acumula Pontos" no seu cartão preferido!</p>
+                <a asp-controller="Cartoes" asp-action="Index" class="inline-flex items-center gap-2 text-white bg-blue-600 hover:bg-blue-700 font-semibold rounded-xl text-sm px-4 py-2">
+                    Ver Meus Cartões
+                </a>
             </div>
         </div>
     }
 </div>
 
-<!-- Extratos de Pontos e Resgates -->
-<div class="row g-4">
-    <!-- Últimos Pontos Gerados -->
-    <div class="col-lg-7">
-        <div class="card-custom p-4 h-100">
-            <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
-                <i class="bi bi-arrow-up-right-circle-fill text-success"></i> Extrato de Pontos Ganhos
-            </h5>
+<!-- Extrato de Pontos e Resgates -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Extrato de Pontos Ganhos (7 cols) -->
+    <div class="lg:col-span-7">
+        <div class="card-fintech p-6 h-full flex flex-col">
+            <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <i class="bi bi-arrow-up-right-circle-fill text-emerald-600"></i> Extrato de Pontos Ganhos
+            </h2>
 
             @if (Model.ExtratoTransacoes.Any())
             {
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0 fs-7">
-                        <thead class="table-light">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-slate-600">
+                        <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th>Data</th>
-                                <th>Compra / Cartão</th>
-                                <th>Valor</th>
-                                <th class="text-end">Pontos</th>
+                                <th scope="col" class="px-3 py-3">Data</th>
+                                <th scope="col" class="px-3 py-3">Compra / Cartão</th>
+                                <th scope="col" class="px-3 py-3">Valor</th>
+                                <th scope="col" class="px-3 py-3 text-right">Pontos</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-slate-100">
                             @foreach (var t in Model.ExtratoTransacoes)
                             {
-                                <tr>
-                                    <td class="text-muted">@t.Data.ToString("dd/MM/yyyy")</td>
-                                    <td>
-                                        <div class="fw-semibold text-dark">@t.Descricao</div>
-                                        <small class="text-muted">@t.CartaoCredito?.Nome</small>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-3 py-3 text-xs text-slate-500">@t.Data.ToString("dd/MM/yyyy")</td>
+                                    <td class="px-3 py-3">
+                                        <div class="font-semibold text-slate-800">@t.Descricao</div>
+                                        <small class="text-slate-400">@t.CartaoCredito?.Nome</small>
                                     </td>
-                                    <td>@t.Valor.ToString("C", culturaBr)</td>
-                                    <td class="text-end">
-                                        <span class="badge-pontos">+@t.PontosGerados.ToString("N1", culturaBr) pts</span>
+                                    <td class="px-3 py-3 font-medium text-slate-700">@t.Valor.ToString("C", culturaBr)</td>
+                                    <td class="px-3 py-3 text-right">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800">
+                                            +@t.PontosGerados.ToString("N1", culturaBr) pts
+                                        </span>
                                     </td>
                                 </tr>
                             }
@@ -112,41 +120,41 @@
             }
             else
             {
-                <div class="text-center py-5 text-muted">
-                    <p class="mb-0">Nenhuma pontuação registrada ainda.</p>
+                <div class="text-center py-10 text-slate-400 my-auto">
+                    <p class="text-sm">Nenhuma pontuação registrada ainda.</p>
                 </div>
             }
         </div>
     </div>
 
-    <!-- Histórico de Resgates / Transferências -->
-    <div class="col-lg-5">
-        <div class="card-custom p-4 h-100">
-            <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
-                <i class="bi bi-box-arrow-up-right text-warning"></i> Histórico de Resgates
-            </h5>
+    <!-- Histórico de Resgates (5 cols) -->
+    <div class="lg:col-span-5">
+        <div class="card-fintech p-6 h-full flex flex-col">
+            <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <i class="bi bi-box-arrow-up-right text-amber-500"></i> Histórico de Resgates
+            </h2>
 
             @if (Model.HistoricoResgates.Any())
             {
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0 fs-7">
-                        <thead class="table-light">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-slate-600">
+                        <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th>Data</th>
-                                <th>Destino / Descrição</th>
-                                <th class="text-end">Pontos</th>
+                                <th scope="col" class="px-3 py-3">Data</th>
+                                <th scope="col" class="px-3 py-3">Descrição</th>
+                                <th scope="col" class="px-3 py-3 text-right">Pontos</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-slate-100">
                             @foreach (var r in Model.HistoricoResgates)
                             {
-                                <tr>
-                                    <td class="text-muted">@r.Data.ToString("dd/MM/yyyy")</td>
-                                    <td>
-                                        <div class="fw-semibold">@r.Descricao</div>
-                                        <small class="text-muted">@r.CartaoCredito?.NomeProgramaPontos (@r.CartaoCredito?.Nome)</small>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-3 py-3 text-xs text-slate-500">@r.Data.ToString("dd/MM/yyyy")</td>
+                                    <td class="px-3 py-3">
+                                        <div class="font-semibold text-slate-800">@r.Descricao</div>
+                                        <small class="text-slate-400">@r.CartaoCredito?.NomeProgramaPontos</small>
                                     </td>
-                                    <td class="text-end fw-bold text-danger">
+                                    <td class="px-3 py-3 text-right font-bold text-rose-600">
                                         -@r.Pontos.ToString("N0", culturaBr) pts
                                     </td>
                                 </tr>
@@ -157,9 +165,9 @@
             }
             else
             {
-                <div class="text-center py-5 text-muted">
-                    <i class="bi bi-inbox fs-2 mb-2"></i>
-                    <p class="mb-0">Nenhum resgate registrado até o momento.</p>
+                <div class="text-center py-10 text-slate-400 my-auto">
+                    <i class="bi bi-inbox text-3xl mb-2 block"></i>
+                    <p class="text-sm">Nenhum resgate registrado.</p>
                 </div>
             }
         </div>

@@ -5,115 +5,129 @@
     ViewData["Title"] = "Novo Cartão de Crédito";
 }
 
-<div class="row justify-content-center">
-    <div class="col-lg-8">
-        <div class="card-custom p-4">
-            <h4 class="fw-bold mb-4">
-                <i class="bi bi-credit-card-2-front-fill text-primary"></i> Cadastrar Cartão de Crédito
-            </h4>
+<div class="max-w-3xl mx-auto">
+    <div class="card-fintech p-6 sm:p-8">
+        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+                <i class="bi bi-credit-card-2-front-fill"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-slate-900">Cadastrar Cartão de Crédito</h1>
+                <p class="text-xs text-slate-500">Configure limites, datas de fatura e o programa de pontos/milhas.</p>
+            </div>
+        </div>
 
-            <form asp-action="Create">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <form asp-action="Create" class="space-y-6">
+            <div asp-validation-summary="ModelOnly" class="text-rose-600 text-sm mb-4"></div>
 
-                <!-- Dados Básicos -->
-                <h6 class="fw-bold text-secondary mb-3"><i class="bi bi-info-circle"></i> Dados Principais</h6>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-8">
-                        <label asp-for="Nome" class="form-label fw-semibold"></label>
-                        <input asp-for="Nome" class="form-control rounded-3" placeholder="Ex: C6 Carbon Black, Nubank, Itaú..." />
-                        <span asp-validation-for="Nome" class="text-danger"></span>
+            <!-- Dados Principais -->
+            <div>
+                <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+                    <i class="bi bi-info-circle"></i> Dados do Cartão
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="md:col-span-2">
+                        <label asp-for="Nome" class="block mb-2 text-sm font-medium text-slate-700">Nome do Cartão</label>
+                        <input asp-for="Nome" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: C6 Carbon Black, Nubank, Itaú..." />
+                        <span asp-validation-for="Nome" class="text-rose-500 text-xs mt-1 block"></span>
                     </div>
 
-                    <div class="col-md-4">
-                        <label asp-for="Bandeira" class="form-label fw-semibold"></label>
-                        <select asp-for="Bandeira" class="form-select rounded-3">
+                    <div>
+                        <label asp-for="Bandeira" class="block mb-2 text-sm font-medium text-slate-700">Bandeira</label>
+                        <select asp-for="Bandeira" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             <option value="Mastercard">Mastercard</option>
                             <option value="Visa">Visa</option>
                             <option value="Elo">Elo</option>
                             <option value="American Express">American Express</option>
                             <option value="Outra">Outra</option>
                         </select>
-                        <span asp-validation-for="Bandeira" class="text-danger"></span>
+                        <span asp-validation-for="Bandeira" class="text-rose-500 text-xs mt-1 block"></span>
                     </div>
                 </div>
 
-                <div class="row g-3 mb-4">
-                    <div class="col-md-4">
-                        <label asp-for="LimiteTotal" class="form-label fw-semibold">Limite Total (R$)</label>
-                        <input asp-for="LimiteTotal" type="number" step="0.01" class="form-control rounded-3" placeholder="0,00" />
-                        <span asp-validation-for="LimiteTotal" class="text-danger"></span>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div>
+                        <label asp-for="LimiteTotal" class="block mb-2 text-sm font-medium text-slate-700">Limite Total (R$)</label>
+                        <input asp-for="LimiteTotal" type="number" step="0.01" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="0,00" />
+                        <span asp-validation-for="LimiteTotal" class="text-rose-500 text-xs mt-1 block"></span>
                     </div>
 
-                    <div class="col-md-4">
-                        <label asp-for="DiaFechamento" class="form-label fw-semibold">Dia de Fechamento</label>
-                        <input asp-for="DiaFechamento" type="number" min="1" max="31" class="form-control rounded-3" />
-                        <span asp-validation-for="DiaFechamento" class="text-danger"></span>
-                        <small class="text-muted">Dia em que a fatura fecha.</small>
+                    <div>
+                        <label asp-for="DiaFechamento" class="block mb-2 text-sm font-medium text-slate-700">Dia de Fechamento</label>
+                        <input asp-for="DiaFechamento" type="number" min="1" max="31" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        <span class="text-[11px] text-slate-400">Dia do fechamento/corte.</span>
+                        <span asp-validation-for="DiaFechamento" class="text-rose-500 text-xs mt-1 block"></span>
                     </div>
 
-                    <div class="col-md-4">
-                        <label asp-for="DiaVencimento" class="form-label fw-semibold">Dia de Vencimento</label>
-                        <input asp-for="DiaVencimento" type="number" min="1" max="31" class="form-control rounded-3" />
-                        <span asp-validation-for="DiaVencimento" class="text-danger"></span>
-                        <small class="text-muted">Dia do pagamento da fatura.</small>
+                    <div>
+                        <label asp-for="DiaVencimento" class="block mb-2 text-sm font-medium text-slate-700">Dia de Vencimento</label>
+                        <input asp-for="DiaVencimento" type="number" min="1" max="31" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        <span class="text-[11px] text-slate-400">Dia do pagamento da fatura.</span>
+                        <span asp-validation-for="DiaVencimento" class="text-rose-500 text-xs mt-1 block"></span>
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <label asp-for="CorHex" class="form-label fw-semibold">Cor Visual do Cartão</label>
-                    <input asp-for="CorHex" type="color" class="form-control form-control-color rounded-3 w-100" value="#1e293b" title="Escolha a cor do cartão" />
-                    <span asp-validation-for="CorHex" class="text-danger"></span>
+                <div class="mt-4">
+                    <label asp-for="CorHex" class="block mb-2 text-sm font-medium text-slate-700">Cor do Cartão</label>
+                    <input asp-for="CorHex" type="color" class="p-1 h-10 w-full block bg-slate-50 border border-slate-300 rounded-xl cursor-pointer" value="#1e293b" />
+                    <span asp-validation-for="CorHex" class="text-rose-500 text-xs mt-1 block"></span>
                 </div>
+            </div>
 
-                <!-- Configuração de Pontos e Milhas -->
-                <div class="card p-3 rounded-3 mb-4 bg-light border">
-                    <div class="form-check form-switch mb-3">
-                        <input asp-for="AcumulaPontos" class="form-check-input" type="checkbox" id="checkAcumulaPontos">
-                        <label class="form-check-label fw-bold" for="checkAcumulaPontos">
-                            <i class="bi bi-stars text-warning me-1"></i> Este cartão acumula pontos / milhas ou cashback?
-                        </label>
-                    </div>
+            <!-- Configuração de Pontos / Milhas -->
+            <div class="p-5 rounded-2xl bg-amber-50/60 border border-amber-200/60">
+                <label class="inline-flex items-center cursor-pointer mb-4">
+                    <input asp-for="AcumulaPontos" type="checkbox" id="checkAcumulaPontos" class="sr-only peer">
+                    <div class="relative w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-amber-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                    <span class="ms-3 text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                        <i class="bi bi-stars text-amber-500"></i> Este cartão acumula pontos / milhas ou cashback?
+                    </span>
+                </label>
 
-                    <div id="secaoPontos">
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-6">
-                                <label asp-for="NomeProgramaPontos" class="form-label fw-semibold"></label>
-                                <input asp-for="NomeProgramaPontos" class="form-control rounded-3" placeholder="Ex: Livelo, Esfera, Átomos, Smiles..." />
-                                <span asp-validation-for="NomeProgramaPontos" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label asp-for="TipoRegra" class="form-label fw-semibold"></label>
-                                <select asp-for="TipoRegra" class="form-select rounded-3" asp-items="Html.GetEnumSelectList<TipoRegraPontos>()">
-                                </select>
-                                <span asp-validation-for="TipoRegra" class="text-danger"></span>
-                            </div>
+                <div id="secaoPontos" class="space-y-4 pt-2 border-t border-amber-200/50">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label asp-for="NomeProgramaPontos" class="block mb-2 text-sm font-medium text-slate-700">Nome do Programa</label>
+                            <input asp-for="NomeProgramaPontos" class="bg-white border border-amber-300 text-slate-900 text-sm rounded-xl focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5" placeholder="Ex: Livelo, Esfera, Átomos, Smiles..." />
+                            <span asp-validation-for="NomeProgramaPontos" class="text-rose-500 text-xs mt-1 block"></span>
                         </div>
 
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label asp-for="FatorPontuacao" class="form-label fw-semibold">Pontos / Fator Multiplicador</label>
-                                <input asp-for="FatorPontuacao" type="number" step="0.1" class="form-control rounded-3" placeholder="Ex: 2.5" />
-                                <small class="text-muted">Ex: 2.5 para 2.5 pts/US$, ou 1.0 para 1 pt/R$.</small>
-                                <span asp-validation-for="FatorPontuacao" class="text-danger"></span>
-                            </div>
+                        <div>
+                            <label asp-for="TipoRegra" class="block mb-2 text-sm font-medium text-slate-700">Tipo de Regra</label>
+                            <select asp-for="TipoRegra" class="bg-white border border-amber-300 text-slate-900 text-sm rounded-xl focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5" asp-items="Html.GetEnumSelectList<TipoRegraPontos>()">
+                            </select>
+                            <span asp-validation-for="TipoRegra" class="text-rose-500 text-xs mt-1 block"></span>
+                        </div>
+                    </div>
 
-                            <div class="col-md-6">
-                                <label asp-for="CotacaoDolarReferencia" class="form-label fw-semibold">Cotação Dólar Referência (R$)</label>
-                                <input asp-for="CotacaoDolarReferencia" type="number" step="0.01" class="form-control rounded-3" placeholder="Ex: 5.50" />
-                                <small class="text-muted">Usado quando a regra for por dólar gasto.</small>
-                                <span asp-validation-for="CotacaoDolarReferencia" class="text-danger"></span>
-                            </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label asp-for="FatorPontuacao" class="block mb-2 text-sm font-medium text-slate-700">Pontos / Multiplicador</label>
+                            <input asp-for="FatorPontuacao" type="number" step="0.1" class="bg-white border border-amber-300 text-slate-900 text-sm rounded-xl focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5" placeholder="Ex: 2.5" />
+                            <span class="text-[11px] text-slate-500">Ex: 2.5 para 2.5 pts/US$, ou 1.0 para 1 pt/R$.</span>
+                            <span asp-validation-for="FatorPontuacao" class="text-rose-500 text-xs mt-1 block"></span>
+                        </div>
+
+                        <div>
+                            <label asp-for="CotacaoDolarReferencia" class="block mb-2 text-sm font-medium text-slate-700">Cotação Dólar Referência (R$)</label>
+                            <input asp-for="CotacaoDolarReferencia" type="number" step="0.01" class="bg-white border border-amber-300 text-slate-900 text-sm rounded-xl focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5" placeholder="Ex: 5.50" />
+                            <span class="text-[11px] text-slate-500">Usado se a regra for por dólar gasto.</span>
+                            <span asp-validation-for="CotacaoDolarReferencia" class="text-rose-500 text-xs mt-1 block"></span>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="d-flex justify-content-end gap-2">
-                    <a asp-action="Index" class="btn btn-outline-secondary rounded-3">Cancelar</a>
-                    <button type="submit" class="btn btn-custom-primary">Salvar Cartão</button>
-                </div>
-            </form>
-        </div>
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                <a asp-action="Index" class="py-2.5 px-5 text-sm font-medium text-slate-600 bg-white rounded-xl border border-slate-300 hover:bg-slate-50 transition-colors">
+                    Cancelar
+                </a>
+                <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-6 py-2.5 shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5">
+                    Salvar Cartão
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -124,9 +138,9 @@
 
         function togglePontos() {
             if (checkPontos.checked) {
-                secaoPontos.style.display = 'block';
+                secaoPontos.classList.remove('hidden');
             } else {
-                secaoPontos.style.display = 'none';
+                secaoPontos.classList.add('hidden');
             }
         }
 

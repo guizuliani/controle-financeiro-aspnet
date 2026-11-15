@@ -8,138 +8,149 @@
     var meses = new[] { "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" };
 }
 
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+<!-- Cabeçalho e Filtro -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
     <div>
-        <h2 class="fw-bold mb-1">Painel Financeiro & Cartões</h2>
-        <p class="text-muted mb-0">Resumo geral das suas finanças em @meses[Model.MesAtual - 1] de @Model.AnoAtual</p>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Painel Financeiro</h1>
+        <p class="text-slate-500 text-sm mt-0.5">Resumo financeiro de <span class="font-semibold text-slate-700">@meses[Model.MesAtual - 1] de @Model.AnoAtual</span></p>
     </div>
 
     <!-- Filtro de Mês/Ano -->
-    <form method="get" class="d-flex align-items-center gap-2">
-        <select name="mes" class="form-select form-select-sm rounded-3 shadow-sm">
+    <form method="get" class="flex flex-wrap items-center gap-2 bg-white p-2 rounded-2xl border border-slate-200 shadow-sm">
+        <select name="mes" class="bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2">
             @for (int i = 1; i <= 12; i++)
             {
                 <option value="@i" selected="@(Model.MesAtual == i)">@meses[i - 1]</option>
             }
         </select>
 
-        <select name="ano" class="form-select form-select-sm rounded-3 shadow-sm">
+        <select name="ano" class="bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2">
             @for (int a = DateTime.Today.Year - 2; a <= DateTime.Today.Year + 2; a++)
             {
                 <option value="@a" selected="@(Model.AnoAtual == a)">@a</option>
             }
         </select>
 
-        <button type="submit" class="btn btn-sm btn-outline-primary rounded-3">
-            <i class="bi bi-funnel-fill"></i> Filtrar
+        <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-xl text-xs px-3 py-2 text-center inline-flex items-center gap-1 transition-colors">
+            <i class="bi bi-funnel-fill"></i>
+            <span>Filtrar</span>
         </button>
     </form>
 </div>
 
-<!-- Cards Principais (Fluxo de Caixa + Cartão + Pontos) -->
-<div class="row g-3 mb-4">
+<!-- 5 Cards de Estatísticas Principais (Grid Responsivo) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
     <!-- Receitas -->
-    <div class="col-md-6 col-xl">
-        <div class="card-custom stat-card h-100">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="text-muted fw-semibold fs-7">Receitas em Conta</span>
-                <div class="icon-box" style="background-color: rgba(16, 185, 129, 0.1); color: #10b981;">
-                    <i class="bi bi-arrow-up-right-circle-fill"></i>
-                </div>
+    <div class="card-fintech p-5 flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Receitas em Conta</span>
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
+                <i class="bi bi-arrow-up-right-circle-fill"></i>
             </div>
-            <h4 class="fw-bold text-success mb-0">@Model.TotalReceitas.ToString("C", culturaBr)</h4>
+        </div>
+        <div>
+            <h3 class="text-2xl font-bold text-emerald-600 tracking-tight">@Model.TotalReceitas.ToString("C", culturaBr)</h3>
+            <span class="text-xs text-slate-400">Entradas no mês</span>
         </div>
     </div>
 
-    <!-- Despesas em Conta -->
-    <div class="col-md-6 col-xl">
-        <div class="card-custom stat-card h-100">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="text-muted fw-semibold fs-7">Despesas em Conta</span>
-                <div class="icon-box" style="background-color: rgba(239, 68, 68, 0.1); color: #ef4444;">
-                    <i class="bi bi-arrow-down-left-circle-fill"></i>
-                </div>
+    <!-- Despesas -->
+    <div class="card-fintech p-5 flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Despesas em Conta</span>
+            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg">
+                <i class="bi bi-arrow-down-left-circle-fill"></i>
             </div>
-            <h4 class="fw-bold text-danger mb-0">@Model.TotalDespesas.ToString("C", culturaBr)</h4>
+        </div>
+        <div>
+            <h3 class="text-2xl font-bold text-rose-600 tracking-tight">@Model.TotalDespesas.ToString("C", culturaBr)</h3>
+            <span class="text-xs text-slate-400">Saídas no mês</span>
         </div>
     </div>
 
     <!-- Saldo em Conta -->
-    <div class="col-md-6 col-xl">
-        <div class="card-custom stat-card h-100">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="text-muted fw-semibold fs-7">Saldo em Conta</span>
-                <div class="icon-box" style="background-color: rgba(59, 130, 246, 0.1); color: #3b82f6;">
-                    <i class="bi bi-wallet2"></i>
-                </div>
+    <div class="card-fintech p-5 flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Saldo em Conta</span>
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
+                <i class="bi bi-wallet2"></i>
             </div>
-            <h4 class="fw-bold @(Model.SaldoTotal >= 0 ? "text-primary" : "text-danger") mb-0">
+        </div>
+        <div>
+            <h3 class="text-2xl font-bold @(Model.SaldoTotal >= 0 ? "text-blue-600" : "text-rose-600") tracking-tight">
                 @Model.SaldoTotal.ToString("C", culturaBr)
-            </h4>
+            </h3>
+            <span class="text-xs text-slate-400">Receitas - Despesas</span>
         </div>
     </div>
 
-    <!-- Faturas do Mês -->
-    <div class="col-md-6 col-xl">
-        <div class="card-custom stat-card h-100">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="text-muted fw-semibold fs-7">Faturas de Cartão</span>
-                <div class="icon-box" style="background-color: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
-                    <i class="bi bi-credit-card-2-front-fill"></i>
-                </div>
+    <!-- Faturas de Cartão -->
+    <div class="card-fintech p-5 flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Faturas de Cartão</span>
+            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg">
+                <i class="bi bi-credit-card-2-front-fill"></i>
             </div>
-            <h4 class="fw-bold text-purple mb-0" style="color: #8b5cf6;">@Model.TotalFaturasMes.ToString("C", culturaBr)</h4>
-            <small class="text-muted fs-8">Total a pagar em @meses[Model.MesAtual - 1]</small>
+        </div>
+        <div>
+            <h3 class="text-2xl font-bold text-purple-600 tracking-tight">@Model.TotalFaturasMes.ToString("C", culturaBr)</h3>
+            <span class="text-xs text-slate-400">A pagar em @meses[Model.MesAtual - 1]</span>
         </div>
     </div>
 
-    <!-- Saldo de Pontos -->
-    <div class="col-md-6 col-xl">
-        <div class="card-custom stat-card h-100">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="text-muted fw-semibold fs-7">Pontos & Milhas</span>
-                <div class="icon-box" style="background-color: rgba(245, 158, 11, 0.1); color: #f59e0b;">
-                    <i class="bi bi-stars"></i>
-                </div>
+    <!-- Pontos & Milhas -->
+    <div class="card-fintech p-5 flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Pontos & Milhas</span>
+            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center text-lg">
+                <i class="bi bi-stars"></i>
             </div>
-            <h4 class="fw-bold text-warning mb-0">@Model.TotalPontosAcumulados.ToString("N0", culturaBr) <span class="fs-7 text-muted">pts</span></h4>
-            <a asp-controller="Pontos" asp-action="Index" class="text-decoration-none fs-8 fw-semibold">Ver extrato &rarr;</a>
+        </div>
+        <div>
+            <h3 class="text-2xl font-bold text-amber-500 tracking-tight">
+                @Model.TotalPontosAcumulados.ToString("N0", culturaBr) <span class="text-xs font-normal text-slate-400">pts</span>
+            </h3>
+            <a asp-controller="Pontos" asp-action="Index" class="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline">Ver extrato &rarr;</a>
         </div>
     </div>
 </div>
 
-<!-- Seção de Cartões (Uso do Limite) -->
+<!-- Seção dos Cartões de Crédito (Uso do Limite) -->
 @if (Model.CartoesResumo.Any())
 {
-    <div class="card-custom p-4 mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold mb-0 d-flex align-items-center gap-2">
-                <i class="bi bi-credit-card text-primary"></i> Situação dos Cartões de Crédito
-            </h5>
-            <a asp-controller="Cartoes" asp-action="Index" class="btn btn-sm btn-link text-decoration-none fw-semibold">
-                Gerenciar Cartões <i class="bi bi-chevron-right"></i>
+    <div class="card-fintech p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i class="bi bi-credit-card text-blue-600"></i> Situação dos Cartões de Crédito
+            </h2>
+            <a asp-controller="Cartoes" asp-action="Index" class="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1">
+                Gerenciar Cartões <i class="bi bi-chevron-right text-xs"></i>
             </a>
         </div>
 
-        <div class="row g-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @foreach (var c in Model.CartoesResumo)
             {
-                <div class="col-md-6">
-                    <div class="p-3 rounded-3 border bg-light">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <strong class="text-dark">@c.Nome</strong>
-                            <a asp-controller="Cartoes" asp-action="Fatura" asp-route-id="@c.Id" class="badge bg-primary text-decoration-none">
-                                Fatura: @c.FaturaMesAtual.ToString("C", culturaBr)
-                            </a>
+                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/80 hover:bg-white transition-colors">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full" style="background-color: @c.CorHex;"></span>
+                            <span class="font-bold text-slate-800 text-sm">@c.Nome</span>
                         </div>
-                        <div class="progress rounded-pill mb-2" style="height: 8px;">
-                            <div class="progress-bar @(c.PercentualUso > 80 ? "bg-danger" : (c.PercentualUso > 50 ? "bg-warning" : "bg-primary"))" 
-                                 style="width: @c.PercentualUso%;"></div>
-                        </div>
-                        <div class="d-flex justify-content-between fs-8 text-muted">
-                            <span>Limite Usado: <strong class="text-danger">@c.LimiteUtilizado.ToString("C", culturaBr)</strong> (@c.PercentualUso%)</span>
-                            <span>Disponível: <strong class="text-success">@c.LimiteDisponivel.ToString("C", culturaBr)</strong></span>
-                        </div>
+                        <a asp-controller="Cartoes" asp-action="Fatura" asp-route-id="@c.Id" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors">
+                            Fatura: @c.FaturaMesAtual.ToString("C", culturaBr)
+                        </a>
+                    </div>
+
+                    <!-- Flowbite Progress Bar -->
+                    <div class="w-full bg-slate-200 rounded-full h-2 mb-2 overflow-hidden">
+                        <div class="h-2 rounded-full @(c.PercentualUso > 80 ? "bg-rose-500" : (c.PercentualUso > 50 ? "bg-amber-500" : "bg-blue-600")) transition-all duration-300" 
+                             style="width: @c.PercentualUso%;"></div>
+                    </div>
+
+                    <div class="flex items-center justify-between text-xs text-slate-500">
+                        <span>Limite Usado: <strong class="text-rose-600">@c.LimiteUtilizado.ToString("C", culturaBr)</strong> (@c.PercentualUso%)</span>
+                        <span>Disponível: <strong class="text-emerald-600">@c.LimiteDisponivel.ToString("C", culturaBr)</strong></span>
                     </div>
                 </div>
             }
@@ -147,80 +158,86 @@
     </div>
 }
 
-<div class="row g-4">
-    <!-- Gráfico de Despesas -->
-    <div class="col-lg-5">
-        <div class="card-custom p-4 h-100">
-            <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
-                <i class="bi bi-pie-chart-fill text-primary"></i> Despesas do Mês por Categoria
-            </h5>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Gráfico de Despesas por Categoria (5 colunas) -->
+    <div class="lg:col-span-5">
+        <div class="card-fintech p-6 h-full flex flex-col">
+            <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <i class="bi bi-pie-chart-fill text-blue-600"></i> Despesas do Mês
+            </h2>
 
             @if (Model.DespesasPorCategoria.Any())
             {
-                <div style="max-height: 280px; position: relative;">
+                <div class="relative flex-grow flex items-center justify-center min-h-[260px]">
                     <canvas id="graficoDespesas"></canvas>
                 </div>
             }
             else
             {
-                <div class="text-center py-5 text-muted">
-                    <i class="bi bi-info-circle fs-1 mb-2"></i>
-                    <p class="mb-0">Nenhuma despesa registrada neste mês.</p>
+                <div class="text-center py-12 text-slate-400 my-auto">
+                    <i class="bi bi-inbox text-4xl mb-2 block"></i>
+                    <p class="text-sm">Nenhuma despesa registrada neste mês.</p>
                 </div>
             }
         </div>
     </div>
 
-    <!-- Últimas Transações -->
-    <div class="col-lg-7">
-        <div class="card-custom p-4 h-100">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="fw-bold mb-0 d-flex align-items-center gap-2">
-                    <i class="bi bi-clock-history text-primary"></i> Últimos Lançamentos
-                </h5>
-                <a asp-controller="Transacoes" asp-action="Index" class="btn btn-sm btn-link text-decoration-none fw-semibold">
-                    Ver todos <i class="bi bi-chevron-right"></i>
+    <!-- Últimos Lançamentos (7 colunas) -->
+    <div class="lg:col-span-7">
+        <div class="card-fintech p-6 h-full flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i class="bi bi-clock-history text-blue-600"></i> Últimos Lançamentos
+                </h2>
+                <a asp-controller="Transacoes" asp-action="Index" class="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1">
+                    Ver todos <i class="bi bi-chevron-right text-xs"></i>
                 </a>
             </div>
 
             @if (Model.UltimasTransacoes.Any())
             {
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0 fs-7">
-                        <thead class="table-light">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-slate-600">
+                        <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th>Descrição</th>
-                                <th>Pagamento</th>
-                                <th>Data</th>
-                                <th class="text-end">Valor</th>
+                                <th scope="col" class="px-3 py-3">Descrição</th>
+                                <th scope="col" class="px-3 py-3">Pagamento</th>
+                                <th scope="col" class="px-3 py-3">Data</th>
+                                <th scope="col" class="px-3 py-3 text-right">Valor</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-slate-100">
                             @foreach (var t in Model.UltimasTransacoes)
                             {
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold">@t.Descricao</div>
-                                        <span class="badge rounded-pill" style="background-color: @(t.Categoria?.CorHex ?? "#6c757d"); color: white; font-size: 0.7rem;">
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-3 py-3">
+                                        <div class="font-semibold text-slate-800">@t.Descricao</div>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium text-white" style="background-color: @(t.Categoria?.CorHex ?? "#6c757d");">
                                             @(t.Categoria?.Nome ?? "Sem categoria")
                                         </span>
                                     </td>
-                                    <td>
+                                    <td class="px-3 py-3">
                                         @if (t.FormaPagamento == FormaPagamento.CartaoCredito)
                                         {
-                                            <span class="badge-cartao">@t.CartaoCredito?.Nome</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                                <i class="bi bi-credit-card-fill mr-1"></i> @t.CartaoCredito?.Nome
+                                            </span>
                                             @if (t.PontosGerados > 0)
                                             {
-                                                <small class="badge-pontos ms-1">+@t.PontosGerados.ToString("N0") pts</small>
+                                                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 ms-1">
+                                                    +@t.PontosGerados.ToString("N0") pts
+                                                </span>
                                             }
                                         }
                                         else
                                         {
-                                            <span class="badge bg-light text-dark border">Conta Corrente</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">
+                                                <i class="bi bi-bank mr-1"></i> Conta
+                                            </span>
                                         }
                                     </td>
-                                    <td class="text-muted">@t.Data.ToString("dd/MM/yyyy")</td>
-                                    <td class="text-end fw-bold @(t.Tipo == TipoTransacao.Receita ? "text-success" : "text-danger")">
+                                    <td class="px-3 py-3 text-slate-500 text-xs">@t.Data.ToString("dd/MM/yyyy")</td>
+                                    <td class="px-3 py-3 text-right font-bold @(t.Tipo == TipoTransacao.Receita ? "text-emerald-600" : "text-rose-600")">
                                         @(t.Tipo == TipoTransacao.Receita ? "+" : "-") @t.Valor.ToString("C", culturaBr)
                                     </td>
                                 </tr>
@@ -231,9 +248,9 @@
             }
             else
             {
-                <div class="text-center py-5 text-muted">
-                    <i class="bi bi-inbox fs-1 mb-2"></i>
-                    <p class="mb-0">Nenhuma transação cadastrada ainda.</p>
+                <div class="text-center py-12 text-slate-400 my-auto">
+                    <i class="bi bi-inbox text-4xl mb-2 block"></i>
+                    <p class="text-sm">Nenhuma transação cadastrada ainda.</p>
                 </div>
             }
         </div>
@@ -257,7 +274,7 @@
                         datasets: [{
                             data: data,
                             backgroundColor: colors,
-                            borderWidth: 2,
+                            borderWidth: 3,
                             borderColor: '#ffffff'
                         }]
                     },
