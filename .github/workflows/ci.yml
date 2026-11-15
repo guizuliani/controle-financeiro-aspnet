@@ -1,0 +1,45 @@
+name: .NET 10 CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build, Test & Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Clonar Repositório
+      uses: actions/checkout@v4
+
+    - name: ⚙️ Configurar .NET 10 SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+        cache: true
+
+    - name: 🛡️ Restaurar Dependências
+      run: dotnet restore
+
+    - name: 🔍 Auditoria de Segurança de Dependências
+      run: dotnet list package --vulnerable --include-transitive
+
+    - name: 🔨 Compilar Aplicação e Testes (Release)
+      run: dotnet build --configuration Release --no-restore
+
+    - name: 🧪 Executar Testes Unitários e Integração
+      run: dotnet test --configuration Release --no-build --verbosity normal
+
+    - name: 📦 Publicar Aplicação (Publish)
+      run: dotnet publish ControleFinanceiro.csproj --configuration Release -o ./publish
+
+    - name: 💾 Salvar Artefato de Publicação
+      uses: actions/upload-artifact@v4
+      with:
+        name: controle-financeiro-app
+        path: ./publish
+        retention-days: 7
