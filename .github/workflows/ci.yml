@@ -37,7 +37,7 @@ jobs:
       run: dotnet publish ControleFinanceiro.csproj --configuration Release -o ./publish
 
     - name: 💾 Salvar Artefato de Publicação
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v7
       with:
         name: controle-financeiro-app
         path: ./publish
