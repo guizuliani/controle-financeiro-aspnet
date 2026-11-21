@@ -1,24 +1,24 @@
-﻿@model IEnumerable<ControleFinanceiro.Domain.Entities.Transacao>
+@model IEnumerable<ControleFinanceiro.Domain.Entities.Transacao>
 @using ControleFinanceiro.Domain.Enums
 @using System.Globalization
 
 @{
-    ViewData["Title"] = "TransaÃ§Ãµes";
+    ViewData["Title"] = "Transações";
     var culturaBr = new CultureInfo("pt-BR");
-    var meses = new[] { "Janeiro", "Fevereiro", "MarÃ§o", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" };
+    var meses = new[] { "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" };
 }
 
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
     <div>
         <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-            <i class="bi bi-arrow-down-up text-blue-600"></i> TransaÃ§Ãµes
+            <i class="bi bi-arrow-down-up text-blue-600"></i> Transações
         </h1>
-        <p class="text-slate-500 text-sm mt-0.5">Gerencie suas entradas, saÃ­das, compras no cartÃ£o e parcelamentos.</p>
+        <p class="text-slate-500 text-sm mt-0.5">Gerencie suas entradas, saídas, compras no cartão e parcelamentos.</p>
     </div>
     <div>
         <a asp-action="Create" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-4 py-2.5 inline-flex items-center gap-2 shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5">
             <i class="bi bi-plus-circle-fill"></i>
-            <span>Nova TransaÃ§Ã£o</span>
+            <span>Nova Transação</span>
         </a>
     </div>
 </div>
@@ -28,12 +28,12 @@
     <form method="get" class="space-y-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             <div>
-                <label class="block mb-1.5 text-xs font-semibold text-slate-600">Buscar DescriÃ§Ã£o</label>
-                <input type="text" name="busca" value="@ViewBag.Busca" class="bg-slate-50 border border-slate-300 text-slate-900 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: Mercado, SalÃ¡rio..." />
+                <label class="block mb-1.5 text-xs font-semibold text-slate-600">Buscar Descrição</label>
+                <input type="text" name="busca" value="@ViewBag.Busca" class="bg-slate-50 border border-slate-300 text-slate-900 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: Mercado, Salário..." />
             </div>
 
             <div>
-                <label class="block mb-1.5 text-xs font-semibold text-slate-600">MÃªs</label>
+                <label class="block mb-1.5 text-xs font-semibold text-slate-600">Mês</label>
                 <select name="mes" class="bg-slate-50 border border-slate-300 text-slate-900 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     @for (int i = 1; i <= 12; i++)
                     {
@@ -57,14 +57,14 @@
                 <select name="formaPagamento" class="bg-slate-50 border border-slate-300 text-slate-900 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     <option value="">Todos</option>
                     <option value="1" selected="@(ViewBag.FormaPagamento != null && (int)ViewBag.FormaPagamento == 1)">Conta Corrente</option>
-                    <option value="2" selected="@(ViewBag.FormaPagamento != null && (int)ViewBag.FormaPagamento == 2)">CartÃ£o de CrÃ©dito</option>
+                    <option value="2" selected="@(ViewBag.FormaPagamento != null && (int)ViewBag.FormaPagamento == 2)">Cartão de Crédito</option>
                 </select>
             </div>
 
             <div>
-                <label class="block mb-1.5 text-xs font-semibold text-slate-600">CartÃ£o</label>
+                <label class="block mb-1.5 text-xs font-semibold text-slate-600">Cartão</label>
                 <select name="cartaoId" class="bg-slate-50 border border-slate-300 text-slate-900 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" asp-items="ViewBag.Cartoes">
-                    <option value="">Todos os CartÃµes</option>
+                    <option value="">Todos os Cartões</option>
                 </select>
             </div>
         </div>
@@ -80,7 +80,7 @@
     </form>
 </div>
 
-<!-- Tabela de TransaÃ§Ãµes -->
+<!-- Tabela de Transações -->
 <div class="card-fintech p-6">
     @if (Model.Any())
     {
@@ -89,13 +89,13 @@
                 <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200">
                     <tr>
                         <th scope="col" class="px-4 py-3">Data</th>
-                        <th scope="col" class="px-4 py-3">DescriÃ§Ã£o</th>
+                        <th scope="col" class="px-4 py-3">Descrição</th>
                         <th scope="col" class="px-4 py-3">Categoria</th>
-                        <th scope="col" class="px-4 py-3">Pagamento / CartÃ£o</th>
+                        <th scope="col" class="px-4 py-3">Pagamento / Cartão</th>
                         <th scope="col" class="px-4 py-3">Parcela</th>
                         <th scope="col" class="px-4 py-3 text-right">Pontos</th>
                         <th scope="col" class="px-4 py-3 text-right">Valor</th>
-                        <th scope="col" class="px-4 py-3 text-center">AÃ§Ãµes</th>
+                        <th scope="col" class="px-4 py-3 text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -119,7 +119,7 @@
                                 @if (item.FormaPagamento == FormaPagamento.CartaoCredito)
                                 {
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-blue-100 text-blue-800">
-                                        <i class="bi bi-credit-card-fill mr-1"></i> @(item.CartaoCredito?.Nome ?? "CartÃ£o")
+                                        <i class="bi bi-credit-card-fill mr-1"></i> @(item.CartaoCredito?.Nome ?? "Cartão")
                                     </span>
                                     @if (item.FaturaMes.HasValue)
                                     {
@@ -142,7 +142,7 @@
                                 }
                                 else
                                 {
-                                    <span class="text-xs text-slate-400">Ã€ vista</span>
+                                    <span class="text-xs text-slate-400">À vista</span>
                                 }
                             </td>
                             <td class="px-4 py-3 text-right">
@@ -180,8 +180,8 @@
     {
         <div class="text-center py-12 text-slate-400">
             <i class="bi bi-inbox text-4xl mb-2 block"></i>
-            <h3 class="font-bold text-slate-700">Nenhuma transaÃ§Ã£o encontrada</h3>
-            <p class="text-sm">Ajuste os filtros ou cadastre um novo lanÃ§amento.</p>
+            <h3 class="font-bold text-slate-700">Nenhuma transação encontrada</h3>
+            <p class="text-sm">Ajuste os filtros ou cadastre um novo lançamento.</p>
         </div>
     }
 </div>

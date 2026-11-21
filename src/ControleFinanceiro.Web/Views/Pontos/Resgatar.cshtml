@@ -1,4 +1,4 @@
-﻿@model ControleFinanceiro.Domain.Entities.ResgatePontos
+@model ControleFinanceiro.Domain.Entities.ResgatePontos
 
 @{
     ViewData["Title"] = "Registrar Resgate de Pontos";
@@ -12,7 +12,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-bold text-slate-900">Registrar Resgate de Pontos</h1>
-                <p class="text-xs text-slate-500">Transfira pontos para milhas aÃ©reas, cashback ou produtos.</p>
+                <p class="text-xs text-slate-500">Transfira pontos para milhas aéreas, cashback ou produtos.</p>
             </div>
         </div>
 
@@ -20,9 +20,9 @@
             <div asp-validation-summary="ModelOnly" class="text-rose-600 text-sm mb-4"></div>
 
             <div>
-                <label asp-for="CartaoCreditoId" class="block mb-2 text-sm font-medium text-slate-700">CartÃ£o / Programa de Origem</label>
+                <label asp-for="CartaoCreditoId" class="block mb-2 text-sm font-medium text-slate-700">Cartão / Programa de Origem</label>
                 <select asp-for="CartaoCreditoId" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5" asp-items="ViewBag.Cartoes">
-                    <option value="">-- Selecione o CartÃ£o --</option>
+                    <option value="">-- Selecione o Cartão --</option>
                 </select>
                 <span asp-validation-for="CartaoCreditoId" class="text-rose-500 text-xs mt-1 block"></span>
             </div>
@@ -35,15 +35,15 @@
                 </div>
 
                 <div>
-                    <label asp-for="Data" class="block mb-2 text-sm font-medium text-slate-700">Data da OperaÃ§Ã£o</label>
+                    <label asp-for="Data" class="block mb-2 text-sm font-medium text-slate-700">Data da Operação</label>
                     <input asp-for="Data" type="date" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5" />
                     <span asp-validation-for="Data" class="text-rose-500 text-xs mt-1 block"></span>
                 </div>
             </div>
 
             <div>
-                <label asp-for="Descricao" class="block mb-2 text-sm font-medium text-slate-700">DescriÃ§Ã£o / Destino</label>
-                <input asp-for="Descricao" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5" placeholder="Ex: TransferÃªncia para Smiles (100% bÃ´nus)..." />
+                <label asp-for="Descricao" class="block mb-2 text-sm font-medium text-slate-700">Descrição / Destino</label>
+                <input asp-for="Descricao" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5" placeholder="Ex: Transferência para Smiles (100% bônus)..." />
                 <span asp-validation-for="Descricao" class="text-rose-500 text-xs mt-1 block"></span>
             </div>
 

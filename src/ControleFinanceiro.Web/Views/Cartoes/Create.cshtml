@@ -1,8 +1,8 @@
-﻿@model ControleFinanceiro.Domain.Entities.CartaoCredito
+@model ControleFinanceiro.Domain.Entities.CartaoCredito
 @using ControleFinanceiro.Domain.Enums
 
 @{
-    ViewData["Title"] = "Novo CartÃ£o de CrÃ©dito";
+    ViewData["Title"] = "Novo Cartão de Crédito";
 }
 
 <div class="max-w-3xl mx-auto">
@@ -12,7 +12,7 @@
                 <i class="bi bi-credit-card-2-front-fill"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold text-slate-900">Cadastrar CartÃ£o de CrÃ©dito</h1>
+                <h1 class="text-xl font-bold text-slate-900">Cadastrar Cartão de Crédito</h1>
                 <p class="text-xs text-slate-500">Configure limites, datas de fatura e o programa de pontos/milhas.</p>
             </div>
         </div>
@@ -23,13 +23,13 @@
             <!-- Dados Principais -->
             <div>
                 <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
-                    <i class="bi bi-info-circle"></i> Dados do CartÃ£o
+                    <i class="bi bi-info-circle"></i> Dados do Cartão
                 </h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="md:col-span-2">
-                        <label asp-for="Nome" class="block mb-2 text-sm font-medium text-slate-700">Nome do CartÃ£o</label>
-                        <input asp-for="Nome" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: C6 Carbon Black, Nubank, ItaÃº..." />
+                        <label asp-for="Nome" class="block mb-2 text-sm font-medium text-slate-700">Nome do Cartão</label>
+                        <input asp-for="Nome" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: C6 Carbon Black, Nubank, Itaú..." />
                         <span asp-validation-for="Nome" class="text-rose-500 text-xs mt-1 block"></span>
                     </div>
 
@@ -69,19 +69,19 @@
                 </div>
 
                 <div class="mt-4">
-                    <label asp-for="CorHex" class="block mb-2 text-sm font-medium text-slate-700">Cor do CartÃ£o</label>
+                    <label asp-for="CorHex" class="block mb-2 text-sm font-medium text-slate-700">Cor do Cartão</label>
                     <input asp-for="CorHex" type="color" class="p-1 h-10 w-full block bg-slate-50 border border-slate-300 rounded-xl cursor-pointer" value="#1e293b" />
                     <span asp-validation-for="CorHex" class="text-rose-500 text-xs mt-1 block"></span>
                 </div>
             </div>
 
-            <!-- ConfiguraÃ§Ã£o de Pontos / Milhas -->
+            <!-- Configuração de Pontos / Milhas -->
             <div class="p-5 rounded-2xl bg-amber-50/60 border border-amber-200/60">
                 <label class="inline-flex items-center cursor-pointer mb-4">
                     <input asp-for="AcumulaPontos" type="checkbox" id="checkAcumulaPontos" class="sr-only peer">
                     <div class="relative w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-amber-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
                     <span class="ms-3 text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                        <i class="bi bi-stars text-amber-500"></i> Este cartÃ£o acumula pontos / milhas ou cashback?
+                        <i class="bi bi-stars text-amber-500"></i> Este cartão acumula pontos / milhas ou cashback?
                     </span>
                 </label>
 
@@ -89,7 +89,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label asp-for="NomeProgramaPontos" class="block mb-2 text-sm font-medium text-slate-700">Nome do Programa</label>
-                            <input asp-for="NomeProgramaPontos" class="bg-white border border-amber-300 text-slate-900 text-sm rounded-xl focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5" placeholder="Ex: Livelo, Esfera, Ãtomos, Smiles..." />
+                            <input asp-for="NomeProgramaPontos" class="bg-white border border-amber-300 text-slate-900 text-sm rounded-xl focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5" placeholder="Ex: Livelo, Esfera, Átomos, Smiles..." />
                             <span asp-validation-for="NomeProgramaPontos" class="text-rose-500 text-xs mt-1 block"></span>
                         </div>
 
@@ -110,9 +110,9 @@
                         </div>
 
                         <div>
-                            <label asp-for="CotacaoDolarReferencia" class="block mb-2 text-sm font-medium text-slate-700">CotaÃ§Ã£o DÃ³lar ReferÃªncia (R$)</label>
+                            <label asp-for="CotacaoDolarReferencia" class="block mb-2 text-sm font-medium text-slate-700">Cotação Dólar Referência (R$)</label>
                             <input asp-for="CotacaoDolarReferencia" type="number" step="0.01" class="bg-white border border-amber-300 text-slate-900 text-sm rounded-xl focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5" placeholder="Ex: 5.50" />
-                            <span class="text-[11px] text-slate-500">Usado se a regra for por dÃ³lar gasto.</span>
+                            <span class="text-[11px] text-slate-500">Usado se a regra for por dólar gasto.</span>
                             <span asp-validation-for="CotacaoDolarReferencia" class="text-rose-500 text-xs mt-1 block"></span>
                         </div>
                     </div>
@@ -124,7 +124,7 @@
                     Cancelar
                 </a>
                 <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-6 py-2.5 shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5">
-                    Salvar CartÃ£o
+                    Salvar Cartão
                 </button>
             </div>
         </form>

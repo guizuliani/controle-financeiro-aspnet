@@ -1,8 +1,8 @@
-﻿@model ControleFinanceiro.Domain.Entities.CartaoCredito
+@model ControleFinanceiro.Domain.Entities.CartaoCredito
 @using System.Globalization
 
 @{
-    ViewData["Title"] = "Excluir CartÃ£o de CrÃ©dito";
+    ViewData["Title"] = "Excluir Cartão de Crédito";
     var culturaBr = new CultureInfo("pt-BR");
 }
 
@@ -13,12 +13,12 @@
                 <i class="bi bi-exclamation-triangle-fill"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold text-rose-600">Confirmar ExclusÃ£o</h1>
-                <p class="text-xs text-slate-500">Esta aÃ§Ã£o nÃ£o pode ser desfeita.</p>
+                <h1 class="text-xl font-bold text-rose-600">Confirmar Exclusão</h1>
+                <p class="text-xs text-slate-500">Esta ação não pode ser desfeita.</p>
             </div>
         </div>
 
-        <p class="text-sm text-slate-700 mb-4">VocÃª tem certeza que deseja excluir o cartÃ£o <strong>@Model.Nome</strong>?</p>
+        <p class="text-sm text-slate-700 mb-4">Você tem certeza que deseja excluir o cartão <strong>@Model.Nome</strong>?</p>
 
         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 mb-6 text-sm">
             <div class="flex justify-between">
@@ -31,7 +31,7 @@
             </div>
             <div class="flex justify-between">
                 <span class="text-slate-500">Programa de Pontos:</span>
-                <span class="text-slate-800 font-medium">@(Model.AcumulaPontos ? Model.NomeProgramaPontos : "NÃ£o acumula")</span>
+                <span class="text-slate-800 font-medium">@(Model.AcumulaPontos ? Model.NomeProgramaPontos : "Não acumula")</span>
             </div>
         </div>
 
@@ -39,7 +39,7 @@
         {
             <div class="p-4 mb-4 text-sm text-amber-800 rounded-xl bg-amber-50 border border-amber-200">
                 <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                AtenÃ§Ã£o: Este cartÃ£o possui <strong>@Model.Transacoes.Count transaÃ§Ã£o(Ãµes)</strong> vinculadas. VocÃª nÃ£o poderÃ¡ excluÃ­-lo atÃ© remover essas transaÃ§Ãµes.
+                Atenção: Este cartão possui <strong>@Model.Transacoes.Count transação(ões)</strong> vinculadas. Você não poderá excluí-lo até remover essas transações.
             </div>
         }
 

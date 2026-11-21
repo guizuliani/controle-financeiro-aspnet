@@ -1,4 +1,4 @@
-﻿@model ControleFinanceiro.Domain.Entities.Categoria
+@model ControleFinanceiro.Domain.Entities.Categoria
 
 @{
     ViewData["Title"] = "Nova Categoria";
@@ -12,7 +12,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-bold text-slate-900">Nova Categoria</h1>
-                <p class="text-xs text-slate-500">Crie uma categoria para organizar suas transaÃ§Ãµes.</p>
+                <p class="text-xs text-slate-500">Crie uma categoria para organizar suas transações.</p>
             </div>
         </div>
 
@@ -21,20 +21,20 @@
 
             <div>
                 <label asp-for="Nome" class="block mb-2 text-sm font-medium text-slate-700">Nome da Categoria</label>
-                <input asp-for="Nome" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: AlimentaÃ§Ã£o, SalÃ¡rio, Lazer..." />
+                <input asp-for="Nome" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: Alimentação, Salário, Lazer..." />
                 <span asp-validation-for="Nome" class="text-rose-500 text-xs mt-1 block"></span>
             </div>
 
             <div>
-                <label asp-for="CorHex" class="block mb-2 text-sm font-medium text-slate-700">Cor de IdentificaÃ§Ã£o</label>
+                <label asp-for="CorHex" class="block mb-2 text-sm font-medium text-slate-700">Cor de Identificação</label>
                 <input asp-for="CorHex" type="color" class="p-1 h-10 w-full block bg-slate-50 border border-slate-300 rounded-xl cursor-pointer" value="#3b82f6" />
                 <span asp-validation-for="CorHex" class="text-rose-500 text-xs mt-1 block"></span>
             </div>
 
             <div>
-                <label asp-for="Icone" class="block mb-2 text-sm font-medium text-slate-700">Ãcone (Bootstrap Icons)</label>
+                <label asp-for="Icone" class="block mb-2 text-sm font-medium text-slate-700">Ícone (Bootstrap Icons)</label>
                 <input asp-for="Icone" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: bi-cart4, bi-house, bi-wallet2" value="bi-tag" />
-                <span class="text-xs text-slate-400 mt-1 block">Consulte opÃ§Ãµes em <a href="https://icons.getbootstrap.com/" target="_blank" class="text-blue-600 underline">Bootstrap Icons</a>.</span>
+                <span class="text-xs text-slate-400 mt-1 block">Consulte opções em <a href="https://icons.getbootstrap.com/" target="_blank" class="text-blue-600 underline">Bootstrap Icons</a>.</span>
                 <span asp-validation-for="Icone" class="text-rose-500 text-xs mt-1 block"></span>
             </div>
 

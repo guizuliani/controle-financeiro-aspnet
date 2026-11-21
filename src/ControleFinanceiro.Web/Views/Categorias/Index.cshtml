@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ControleFinanceiro.Domain.Entities.Categoria>
+@model IEnumerable<ControleFinanceiro.Domain.Entities.Categoria>
 
 @{
     ViewData["Title"] = "Categorias";
@@ -27,7 +27,7 @@
                 <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold text-white shadow-sm" style="background-color: @item.CorHex;">
                     <i class="bi @item.Icone me-1.5"></i> @item.Nome
                 </span>
-                <span class="text-xs text-slate-400 font-medium">@item.Transacoes.Count lanÃ§amentos</span>
+                <span class="text-xs text-slate-400 font-medium">@item.Transacoes.Count lançamentos</span>
             </div>
 
             <div class="flex items-center justify-end gap-2 border-t border-slate-100 pt-3 mt-2">
