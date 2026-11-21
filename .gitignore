@@ -11,6 +11,7 @@
 *.db
 *.db-shm
 *.db-wal
+App_Data/
 
 ## Visual Studio / VS Code / Antigravity cache
 .vs/

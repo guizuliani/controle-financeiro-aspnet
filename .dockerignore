@@ -10,6 +10,7 @@
 **/*.db-wal
 **/publish
 **/data
+**/App_Data
 tests
 Dockerfile*
 docker-compose*

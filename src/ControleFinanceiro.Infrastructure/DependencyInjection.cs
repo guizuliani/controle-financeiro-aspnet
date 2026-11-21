@@ -3,6 +3,7 @@ using ControleFinanceiro.Application.Services;
 using ControleFinanceiro.Domain.Ports;
 using ControleFinanceiro.Infrastructure.Persistence;
 using ControleFinanceiro.Infrastructure.Repositories;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,6 +38,18 @@ public static class DependencyInjection
     {
         using var scope = serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var connectionString = context.Database.GetConnectionString();
+        if (!string.IsNullOrWhiteSpace(connectionString))
+        {
+            var builder = new SqliteConnectionStringBuilder(connectionString);
+            var directory = Path.GetDirectoryName(builder.DataSource);
+            if (!string.IsNullOrWhiteSpace(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+        }
+
         context.Database.EnsureCreated();
     }
 }
