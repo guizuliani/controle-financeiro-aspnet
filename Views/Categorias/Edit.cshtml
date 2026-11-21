@@ -1,4 +1,4 @@
-@model ControleFinanceiro.Models.Categoria
+﻿@model ControleFinanceiro.Domain.Entities.Categoria
 
 @{
     ViewData["Title"] = "Editar Categoria";
@@ -12,7 +12,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-bold text-slate-900">Editar Categoria</h1>
-                <p class="text-xs text-slate-500">Atualize as informações desta categoria.</p>
+                <p class="text-xs text-slate-500">Atualize as informaÃ§Ãµes desta categoria.</p>
             </div>
         </div>
 
@@ -27,13 +27,13 @@
             </div>
 
             <div>
-                <label asp-for="CorHex" class="block mb-2 text-sm font-medium text-slate-700">Cor de Identificação</label>
+                <label asp-for="CorHex" class="block mb-2 text-sm font-medium text-slate-700">Cor de IdentificaÃ§Ã£o</label>
                 <input asp-for="CorHex" type="color" class="p-1 h-10 w-full block bg-slate-50 border border-slate-300 rounded-xl cursor-pointer" />
                 <span asp-validation-for="CorHex" class="text-rose-500 text-xs mt-1 block"></span>
             </div>
 
             <div>
-                <label asp-for="Icone" class="block mb-2 text-sm font-medium text-slate-700">Ícone (Bootstrap Icons)</label>
+                <label asp-for="Icone" class="block mb-2 text-sm font-medium text-slate-700">Ãcone (Bootstrap Icons)</label>
                 <input asp-for="Icone" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                 <span asp-validation-for="Icone" class="text-rose-500 text-xs mt-1 block"></span>
             </div>
@@ -43,7 +43,7 @@
                     Cancelar
                 </a>
                 <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-6 py-2.5 shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5">
-                    Salvar Alterações
+                    Salvar AlteraÃ§Ãµes
                 </button>
             </div>
         </form>

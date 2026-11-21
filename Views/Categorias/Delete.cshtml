@@ -1,4 +1,4 @@
-@model ControleFinanceiro.Models.Categoria
+﻿@model ControleFinanceiro.Domain.Entities.Categoria
 
 @{
     ViewData["Title"] = "Excluir Categoria";
@@ -11,18 +11,18 @@
                 <i class="bi bi-exclamation-triangle-fill"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold text-rose-600">Confirmar Exclusão</h1>
-                <p class="text-xs text-slate-500">Esta ação não pode ser desfeita.</p>
+                <h1 class="text-xl font-bold text-rose-600">Confirmar ExclusÃ£o</h1>
+                <p class="text-xs text-slate-500">Esta aÃ§Ã£o nÃ£o pode ser desfeita.</p>
             </div>
         </div>
 
-        <p class="text-sm text-slate-700 mb-4">Você tem certeza que deseja excluir a categoria <strong>@Model.Nome</strong>?</p>
+        <p class="text-sm text-slate-700 mb-4">VocÃª tem certeza que deseja excluir a categoria <strong>@Model.Nome</strong>?</p>
 
         @if (Model.Transacoes.Any())
         {
             <div class="p-4 mb-4 text-sm text-amber-800 rounded-xl bg-amber-50 border border-amber-200">
                 <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                Atenção: Esta categoria possui <strong>@Model.Transacoes.Count transação(ões)</strong> vinculadas. Você não poderá excluí-la até reclassificar ou excluir essas transações.
+                AtenÃ§Ã£o: Esta categoria possui <strong>@Model.Transacoes.Count transaÃ§Ã£o(Ãµes)</strong> vinculadas. VocÃª nÃ£o poderÃ¡ excluÃ­-la atÃ© reclassificar ou excluir essas transaÃ§Ãµes.
             </div>
         }
 

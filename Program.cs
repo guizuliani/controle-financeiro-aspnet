@@ -1,22 +1,15 @@
-using Microsoft.EntityFrameworkCore;
-using ControleFinanceiro.Data;
+using ControleFinanceiro.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container (Driving & Driven Adapters).
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddHexagonalArchitecture(builder.Configuration.GetConnectionString("DefaultConnection"));
 
 var app = builder.Build();
 
 // Garantir a criação do banco de dados e dados iniciais
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    context.Database.EnsureCreated();
-}
+DependencyInjection.GarantirBancoDadosCriado(app.Services);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

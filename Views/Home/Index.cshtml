@@ -1,21 +1,21 @@
-@model ControleFinanceiro.Models.ViewModels.DashboardViewModel
-@using ControleFinanceiro.Models.Enums
+﻿@model ControleFinanceiro.Models.ViewModels.DashboardViewModel
+@using ControleFinanceiro.Domain.Enums
 @using System.Globalization
 
 @{
     ViewData["Title"] = "Dashboard Financeiro";
     var culturaBr = new CultureInfo("pt-BR");
-    var meses = new[] { "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" };
+    var meses = new[] { "Janeiro", "Fevereiro", "MarÃ§o", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" };
 }
 
-<!-- Cabeçalho e Filtro -->
+<!-- CabeÃ§alho e Filtro -->
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
     <div>
         <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Painel Financeiro</h1>
         <p class="text-slate-500 text-sm mt-0.5">Resumo financeiro de <span class="font-semibold text-slate-700">@meses[Model.MesAtual - 1] de @Model.AnoAtual</span></p>
     </div>
 
-    <!-- Filtro de Mês/Ano -->
+    <!-- Filtro de MÃªs/Ano -->
     <form method="get" class="flex flex-wrap items-center gap-2 bg-white p-2 rounded-2xl border border-slate-200 shadow-sm">
         <select name="mes" class="bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2">
             @for (int i = 1; i <= 12; i++)
@@ -38,7 +38,7 @@
     </form>
 </div>
 
-<!-- 5 Cards de Estatísticas Principais (Grid Responsivo) -->
+<!-- 5 Cards de EstatÃ­sticas Principais (Grid Responsivo) -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
     <!-- Receitas -->
     <div class="card-fintech p-5 flex flex-col justify-between">
@@ -50,7 +50,7 @@
         </div>
         <div>
             <h3 class="text-2xl font-bold text-emerald-600 tracking-tight">@Model.TotalReceitas.ToString("C", culturaBr)</h3>
-            <span class="text-xs text-slate-400">Entradas no mês</span>
+            <span class="text-xs text-slate-400">Entradas no mÃªs</span>
         </div>
     </div>
 
@@ -64,7 +64,7 @@
         </div>
         <div>
             <h3 class="text-2xl font-bold text-rose-600 tracking-tight">@Model.TotalDespesas.ToString("C", culturaBr)</h3>
-            <span class="text-xs text-slate-400">Saídas no mês</span>
+            <span class="text-xs text-slate-400">SaÃ­das no mÃªs</span>
         </div>
     </div>
 
@@ -84,10 +84,10 @@
         </div>
     </div>
 
-    <!-- Faturas de Cartão -->
+    <!-- Faturas de CartÃ£o -->
     <div class="card-fintech p-5 flex flex-col justify-between">
         <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Faturas de Cartão</span>
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Faturas de CartÃ£o</span>
             <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg">
                 <i class="bi bi-credit-card-2-front-fill"></i>
             </div>
@@ -115,16 +115,16 @@
     </div>
 </div>
 
-<!-- Seção dos Cartões de Crédito (Uso do Limite) -->
+<!-- SeÃ§Ã£o dos CartÃµes de CrÃ©dito (Uso do Limite) -->
 @if (Model.CartoesResumo.Any())
 {
     <div class="card-fintech p-6 mb-6">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <i class="bi bi-credit-card text-blue-600"></i> Situação dos Cartões de Crédito
+                <i class="bi bi-credit-card text-blue-600"></i> SituaÃ§Ã£o dos CartÃµes de CrÃ©dito
             </h2>
             <a asp-controller="Cartoes" asp-action="Index" class="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1">
-                Gerenciar Cartões <i class="bi bi-chevron-right text-xs"></i>
+                Gerenciar CartÃµes <i class="bi bi-chevron-right text-xs"></i>
             </a>
         </div>
 
@@ -150,7 +150,7 @@
 
                     <div class="flex items-center justify-between text-xs text-slate-500">
                         <span>Limite Usado: <strong class="text-rose-600">@c.LimiteUtilizado.ToString("C", culturaBr)</strong> (@c.PercentualUso%)</span>
-                        <span>Disponível: <strong class="text-emerald-600">@c.LimiteDisponivel.ToString("C", culturaBr)</strong></span>
+                        <span>DisponÃ­vel: <strong class="text-emerald-600">@c.LimiteDisponivel.ToString("C", culturaBr)</strong></span>
                     </div>
                 </div>
             }
@@ -159,11 +159,11 @@
 }
 
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-    <!-- Gráfico de Despesas por Categoria (5 colunas) -->
+    <!-- GrÃ¡fico de Despesas por Categoria (5 colunas) -->
     <div class="lg:col-span-5">
         <div class="card-fintech p-6 h-full flex flex-col">
             <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <i class="bi bi-pie-chart-fill text-blue-600"></i> Despesas do Mês
+                <i class="bi bi-pie-chart-fill text-blue-600"></i> Despesas do MÃªs
             </h2>
 
             @if (Model.DespesasPorCategoria.Any())
@@ -176,18 +176,18 @@
             {
                 <div class="text-center py-12 text-slate-400 my-auto">
                     <i class="bi bi-inbox text-4xl mb-2 block"></i>
-                    <p class="text-sm">Nenhuma despesa registrada neste mês.</p>
+                    <p class="text-sm">Nenhuma despesa registrada neste mÃªs.</p>
                 </div>
             }
         </div>
     </div>
 
-    <!-- Últimos Lançamentos (7 colunas) -->
+    <!-- Ãšltimos LanÃ§amentos (7 colunas) -->
     <div class="lg:col-span-7">
         <div class="card-fintech p-6 h-full flex flex-col">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <i class="bi bi-clock-history text-blue-600"></i> Últimos Lançamentos
+                    <i class="bi bi-clock-history text-blue-600"></i> Ãšltimos LanÃ§amentos
                 </h2>
                 <a asp-controller="Transacoes" asp-action="Index" class="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1">
                     Ver todos <i class="bi bi-chevron-right text-xs"></i>
@@ -200,7 +200,7 @@
                     <table class="w-full text-sm text-left text-slate-600">
                         <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th scope="col" class="px-3 py-3">Descrição</th>
+                                <th scope="col" class="px-3 py-3">DescriÃ§Ã£o</th>
                                 <th scope="col" class="px-3 py-3">Pagamento</th>
                                 <th scope="col" class="px-3 py-3">Data</th>
                                 <th scope="col" class="px-3 py-3 text-right">Valor</th>
@@ -250,7 +250,7 @@
             {
                 <div class="text-center py-12 text-slate-400 my-auto">
                     <i class="bi bi-inbox text-4xl mb-2 block"></i>
-                    <p class="text-sm">Nenhuma transação cadastrada ainda.</p>
+                    <p class="text-sm">Nenhuma transaÃ§Ã£o cadastrada ainda.</p>
                 </div>
             }
         </div>

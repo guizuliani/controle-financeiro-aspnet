@@ -1,8 +1,8 @@
-@model ControleFinanceiro.Models.Transacao
-@using ControleFinanceiro.Models.Enums
+﻿@model ControleFinanceiro.Domain.Entities.Transacao
+@using ControleFinanceiro.Domain.Enums
 
 @{
-    ViewData["Title"] = "Editar Transação";
+    ViewData["Title"] = "Editar TransaÃ§Ã£o";
 }
 
 <div class="max-w-2xl mx-auto">
@@ -12,8 +12,8 @@
                 <i class="bi bi-pencil-square"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold text-slate-900">Editar Transação</h1>
-                <p class="text-xs text-slate-500">Atualize os dados deste lançamento.</p>
+                <h1 class="text-xl font-bold text-slate-900">Editar TransaÃ§Ã£o</h1>
+                <p class="text-xs text-slate-500">Atualize os dados deste lanÃ§amento.</p>
             </div>
         </div>
 
@@ -28,7 +28,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label asp-for="Tipo" class="block mb-2 text-sm font-medium text-slate-700">Tipo de Lançamento</label>
+                    <label asp-for="Tipo" class="block mb-2 text-sm font-medium text-slate-700">Tipo de LanÃ§amento</label>
                     <select asp-for="Tipo" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" asp-items="Html.GetEnumSelectList<TipoTransacao>()">
                     </select>
                     <span asp-validation-for="Tipo" class="text-rose-500 text-xs mt-1 block"></span>
@@ -43,15 +43,15 @@
             </div>
 
             <div id="painelCartao" class="p-4 rounded-xl bg-blue-50/70 border border-blue-200">
-                <label asp-for="CartaoCreditoId" class="block mb-1 text-xs font-semibold text-slate-700">Cartão de Crédito</label>
+                <label asp-for="CartaoCreditoId" class="block mb-1 text-xs font-semibold text-slate-700">CartÃ£o de CrÃ©dito</label>
                 <select asp-for="CartaoCreditoId" class="bg-white border border-blue-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" asp-items="ViewBag.CartaoCreditoId">
-                    <option value="">-- Sem Cartão --</option>
+                    <option value="">-- Sem CartÃ£o --</option>
                 </select>
                 <span asp-validation-for="CartaoCreditoId" class="text-rose-500 text-xs mt-1 block"></span>
             </div>
 
             <div>
-                <label asp-for="Descricao" class="block mb-2 text-sm font-medium text-slate-700">Descrição</label>
+                <label asp-for="Descricao" class="block mb-2 text-sm font-medium text-slate-700">DescriÃ§Ã£o</label>
                 <input asp-for="Descricao" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                 <span asp-validation-for="Descricao" class="text-rose-500 text-xs mt-1 block"></span>
             </div>
@@ -78,7 +78,7 @@
             </div>
 
             <div>
-                <label asp-for="Observacao" class="block mb-2 text-sm font-medium text-slate-700">Observações</label>
+                <label asp-for="Observacao" class="block mb-2 text-sm font-medium text-slate-700">ObservaÃ§Ãµes</label>
                 <textarea asp-for="Observacao" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" rows="3"></textarea>
                 <span asp-validation-for="Observacao" class="text-rose-500 text-xs mt-1 block"></span>
             </div>
@@ -88,7 +88,7 @@
                     Cancelar
                 </a>
                 <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-6 py-2.5 shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5">
-                    Salvar Alterações
+                    Salvar AlteraÃ§Ãµes
                 </button>
             </div>
         </form>

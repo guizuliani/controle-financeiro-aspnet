@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="src\**" />
+    <Content Remove="src\**" />
+    <EmbeddedResource Remove="src\**" />
+    <None Remove="src\**" />
     <Compile Remove="tests\**" />
     <Content Remove="tests\**" />
     <EmbeddedResource Remove="tests\**" />
@@ -14,12 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.10">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.14" />
+    <ProjectReference Include="src\ControleFinanceiro.Application\ControleFinanceiro.Application.csproj" />
+    <ProjectReference Include="src\ControleFinanceiro.Domain\ControleFinanceiro.Domain.csproj" />
+    <ProjectReference Include="src\ControleFinanceiro.Infrastructure\ControleFinanceiro.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

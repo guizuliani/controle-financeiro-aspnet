@@ -123,28 +123,26 @@ docker compose down
 
 ---
 
-## 📂 Estrutura do Repositório
+## 📂 Estrutura do Repositório (Arquitetura Hexagonal)
 
 ```text
-├── Controllers/
-│   ├── HomeController.cs        # Dashboard unificado e resumo de cartões/pontos
-│   ├── CartoesController.cs     # CRUD de cartões, faturas e liquidação
-│   ├── PontosController.cs      # Extrato de pontos, milhas e resgates
-│   ├── TransacoesController.cs  # CRUD, parcelamento e cálculo de pontuação
-│   └── CategoriasController.cs  # CRUD e validações de categorias
-├── Models/
-│   ├── CartaoCredito.cs         # Modelo de cartão com regras de pontuação
-│   ├── ResgatePontos.cs         # Histórico de transferências/resgates de pontos
-│   ├── Transacao.cs             # Transações com suporte a cartão, parcelas e pontos
-│   ├── Categoria.cs             # Categorias de gastos/receitas
-│   ├── Enums/                   # TipoTransacao, FormaPagamento, TipoRegraPontos
-│   └── ViewModels/              # DashboardViewModel, FaturaViewModel, PontosViewModel
-├── Data/
-│   └── AppDbContext.cs          # Mapeamento do EF Core e Seed Data
-├── Views/                       # Views Razor modernas com Tailwind CSS + Flowbite
-├── wwwroot/                     # Ativos estáticos (CSS, JS, Favicon)
-├── appsettings.json             # Configuração de conexão do SQLite
-└── Program.cs                   # Inicialização de serviços e pipeline HTTP
+├── src/
+│   ├── ControleFinanceiro.Domain/           # Núcleo puro: Entidades ricas, Enums e Driven Ports (Interfaces)
+│   ├── ControleFinanceiro.Application/      # Casos de Uso, DTOs e Driving Ports (Serviços)
+│   └── ControleFinanceiro.Infrastructure/   # Driven Adapters: EF Core (AppDbContext) e Repositórios SQLite
+├── Controllers/                             # Driving Adapters (ASP.NET Core MVC)
+│   ├── HomeController.cs
+│   ├── CartoesController.cs
+│   ├── PontosController.cs
+│   ├── TransacoesController.cs
+│   └── CategoriasController.cs
+├── Models/                                  # ViewModels Web
+├── Views/                                   # Views Razor modernas com Tailwind CSS + Flowbite
+├── wwwroot/                                 # Ativos estáticos (CSS, JS, Favicon)
+├── tests/ControleFinanceiro.Tests/          # Suíte de testes unitários (Domínio) e integração (xUnit)
+├── appsettings.json                         # Configuração de conexão do SQLite
+├── Dockerfile & docker-compose.yml          # Conteinerização multi-stage com persistência
+└── Program.cs                               # Composition Root (Injeção de Dependência)
 ```
 
 ---

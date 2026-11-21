@@ -1,3 +1,5 @@
+using ControleFinanceiro.Domain.Entities;
+
 namespace ControleFinanceiro.Models.ViewModels
 {
     public class DashboardViewModel

@@ -1,8 +1,8 @@
-@model ControleFinanceiro.Models.Transacao
-@using ControleFinanceiro.Models.Enums
+﻿@model ControleFinanceiro.Domain.Entities.Transacao
+@using ControleFinanceiro.Domain.Enums
 
 @{
-    ViewData["Title"] = "Nova Transação";
+    ViewData["Title"] = "Nova TransaÃ§Ã£o";
 }
 
 <div class="max-w-2xl mx-auto">
@@ -12,8 +12,8 @@
                 <i class="bi bi-plus-circle-fill"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold text-slate-900">Cadastrar Nova Transação</h1>
-                <p class="text-xs text-slate-500">Registre uma despesa, receita ou compra parcelada no cartão.</p>
+                <h1 class="text-xl font-bold text-slate-900">Cadastrar Nova TransaÃ§Ã£o</h1>
+                <p class="text-xs text-slate-500">Registre uma despesa, receita ou compra parcelada no cartÃ£o.</p>
             </div>
         </div>
 
@@ -22,7 +22,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label asp-for="Tipo" class="block mb-2 text-sm font-medium text-slate-700">Tipo de Lançamento</label>
+                    <label asp-for="Tipo" class="block mb-2 text-sm font-medium text-slate-700">Tipo de LanÃ§amento</label>
                     <select asp-for="Tipo" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="selectTipo" asp-items="Html.GetEnumSelectList<TipoTransacao>()">
                     </select>
                     <span asp-validation-for="Tipo" class="text-rose-500 text-xs mt-1 block"></span>
@@ -36,32 +36,32 @@
                 </div>
             </div>
 
-            <!-- Painel Condicional para Cartão de Crédito -->
+            <!-- Painel Condicional para CartÃ£o de CrÃ©dito -->
             <div id="painelCartao" class="p-4 rounded-xl bg-blue-50/70 border border-blue-200 hidden">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-blue-800 mb-3 flex items-center gap-1.5">
-                    <i class="bi bi-credit-card-2-front"></i> Detalhes do Cartão & Parcelamento
+                    <i class="bi bi-credit-card-2-front"></i> Detalhes do CartÃ£o & Parcelamento
                 </h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="sm:col-span-2">
-                        <label asp-for="CartaoCreditoId" class="block mb-1 text-xs font-semibold text-slate-700">Cartão</label>
+                        <label asp-for="CartaoCreditoId" class="block mb-1 text-xs font-semibold text-slate-700">CartÃ£o</label>
                         <select asp-for="CartaoCreditoId" class="bg-white border border-blue-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" asp-items="ViewBag.CartaoCreditoId">
-                            <option value="">-- Escolha o Cartão --</option>
+                            <option value="">-- Escolha o CartÃ£o --</option>
                         </select>
                         <span asp-validation-for="CartaoCreditoId" class="text-rose-500 text-xs mt-1 block"></span>
                     </div>
 
                     <div>
-                        <label asp-for="TotalParcelas" class="block mb-1 text-xs font-semibold text-slate-700">Nº de Parcelas</label>
+                        <label asp-for="TotalParcelas" class="block mb-1 text-xs font-semibold text-slate-700">NÂº de Parcelas</label>
                         <input asp-for="TotalParcelas" type="number" min="1" max="48" class="bg-white border border-blue-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" value="1" />
-                        <span class="text-[11px] text-slate-500">1x à vista ou até 48x.</span>
+                        <span class="text-[11px] text-slate-500">1x Ã  vista ou atÃ© 48x.</span>
                         <span asp-validation-for="TotalParcelas" class="text-rose-500 text-xs mt-1 block"></span>
                     </div>
                 </div>
             </div>
 
             <div>
-                <label asp-for="Descricao" class="block mb-2 text-sm font-medium text-slate-700">Descrição</label>
-                <input asp-for="Descricao" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: Supermercado, Salário, Celular novo..." />
+                <label asp-for="Descricao" class="block mb-2 text-sm font-medium text-slate-700">DescriÃ§Ã£o</label>
+                <input asp-for="Descricao" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Ex: Supermercado, SalÃ¡rio, Celular novo..." />
                 <span asp-validation-for="Descricao" class="text-rose-500 text-xs mt-1 block"></span>
             </div>
 
@@ -81,14 +81,14 @@
                 </div>
 
                 <div>
-                    <label asp-for="Data" class="block mb-2 text-sm font-medium text-slate-700">Data da Operação</label>
+                    <label asp-for="Data" class="block mb-2 text-sm font-medium text-slate-700">Data da OperaÃ§Ã£o</label>
                     <input asp-for="Data" type="date" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                     <span asp-validation-for="Data" class="text-rose-500 text-xs mt-1 block"></span>
                 </div>
             </div>
 
             <div>
-                <label asp-for="Observacao" class="block mb-2 text-sm font-medium text-slate-700">Observações (opcional)</label>
+                <label asp-for="Observacao" class="block mb-2 text-sm font-medium text-slate-700">ObservaÃ§Ãµes (opcional)</label>
                 <textarea asp-for="Observacao" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" rows="3" placeholder="Detalhes adicionais..."></textarea>
                 <span asp-validation-for="Observacao" class="text-rose-500 text-xs mt-1 block"></span>
             </div>
@@ -98,7 +98,7 @@
                     Cancelar
                 </a>
                 <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-6 py-2.5 shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5">
-                    Salvar Transação
+                    Salvar TransaÃ§Ã£o
                 </button>
             </div>
         </form>
@@ -114,7 +114,7 @@
         function atualizarPainel() {
             if (selectForma.value === "2") {
                 painelCartao.classList.remove('hidden');
-                selectTipo.value = "2"; // Cartão é Despesa
+                selectTipo.value = "2"; // CartÃ£o Ã© Despesa
                 selectTipo.disabled = true;
             } else {
                 painelCartao.classList.add('hidden');

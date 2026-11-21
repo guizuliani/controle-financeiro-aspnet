@@ -1,91 +1,69 @@
-using ControleFinanceiro.Models;
-using ControleFinanceiro.Models.Enums;
+using ControleFinanceiro.Domain.Entities;
+using ControleFinanceiro.Domain.Enums;
 using Xunit;
 
-namespace ControleFinanceiro.Tests
+namespace ControleFinanceiro.Tests;
+
+public class CalculoPontosTests
 {
-    public class CalculoPontosTests
+    [Fact]
+    public void CalcularPontos_RegraPorDolar_DeveCalcularCorretamente()
     {
-        [Fact]
-        public void CalcularPontos_RegraPorDolar_DeveCalcularCorretamente()
+        var cartao = new CartaoCredito
         {
-            // Cenário: R$ 550,00 gastos, Dólar a R$ 5,50, Multiplicador 2.5 pts/US$
-            // US$ 550 / 5.50 = US$ 100 * 2.5 = 250 pontos
-            var cartao = new CartaoCredito
-            {
-                AcumulaPontos = true,
-                TipoRegra = TipoRegraPontos.PorDolar,
-                CotacaoDolarReferencia = 5.50m,
-                FatorPontuacao = 2.5m
-            };
+            AcumulaPontos = true,
+            TipoRegra = TipoRegraPontos.PorDolar,
+            CotacaoDolarReferencia = 5.50m,
+            FatorPontuacao = 2.5m
+        };
 
-            decimal valorGasto = 550.00m;
-            decimal pontos = CalcularPontosHelper(valorGasto, cartao);
+        decimal pontos = cartao.CalcularPontos(550.00m);
 
-            Assert.Equal(250.00m, pontos);
-        }
+        Assert.Equal(250.00m, pontos);
+    }
 
-        [Fact]
-        public void CalcularPontos_RegraPorReal_DeveMultiplicarDireto()
+    [Fact]
+    public void CalcularPontos_RegraPorReal_DeveMultiplicarDireto()
+    {
+        var cartao = new CartaoCredito
         {
-            // Cenário: R$ 350,00 gastos, 1.5 pontos por Real gasto = 525 pontos
-            var cartao = new CartaoCredito
-            {
-                AcumulaPontos = true,
-                TipoRegra = TipoRegraPontos.PorReal,
-                FatorPontuacao = 1.5m
-            };
+            AcumulaPontos = true,
+            TipoRegra = TipoRegraPontos.PorReal,
+            FatorPontuacao = 1.5m
+        };
 
-            decimal valorGasto = 350.00m;
-            decimal pontos = CalcularPontosHelper(valorGasto, cartao);
+        decimal pontos = cartao.CalcularPontos(350.00m);
 
-            Assert.Equal(525.00m, pontos);
-        }
+        Assert.Equal(525.00m, pontos);
+    }
 
-        [Fact]
-        public void CalcularPontos_RegraCashback_DeveCalcularPercentual()
+    [Fact]
+    public void CalcularPontos_RegraCashback_DeveCalcularPercentual()
+    {
+        var cartao = new CartaoCredito
         {
-            // Cenário: R$ 1.000,00 gastos, 1.5% de cashback = R$ 15,00
-            var cartao = new CartaoCredito
-            {
-                AcumulaPontos = true,
-                TipoRegra = TipoRegraPontos.Cashback,
-                FatorPontuacao = 1.5m
-            };
+            AcumulaPontos = true,
+            TipoRegra = TipoRegraPontos.Cashback,
+            FatorPontuacao = 1.5m
+        };
 
-            decimal valorGasto = 1000.00m;
-            decimal cashback = CalcularPontosHelper(valorGasto, cartao);
+        decimal cashback = cartao.CalcularPontos(1000.00m);
 
-            Assert.Equal(15.00m, cashback);
-        }
+        Assert.Equal(15.00m, cashback);
+    }
 
-        [Fact]
-        public void CalcularPontos_CartaoSemPontuacao_DeveRetornarZero()
+    [Fact]
+    public void CalcularPontos_CartaoSemPontuacao_DeveRetornarZero()
+    {
+        var cartao = new CartaoCredito
         {
-            var cartao = new CartaoCredito
-            {
-                AcumulaPontos = false,
-                TipoRegra = TipoRegraPontos.PorDolar,
-                FatorPontuacao = 2.5m
-            };
+            AcumulaPontos = false,
+            TipoRegra = TipoRegraPontos.PorDolar,
+            FatorPontuacao = 2.5m
+        };
 
-            decimal pontos = CalcularPontosHelper(1000.00m, cartao);
+        decimal pontos = cartao.CalcularPontos(1000.00m);
 
-            Assert.Equal(0m, pontos);
-        }
-
-        private static decimal CalcularPontosHelper(decimal valor, CartaoCredito cartao)
-        {
-            if (!cartao.AcumulaPontos || cartao.FatorPontuacao <= 0)
-                return 0;
-
-            return cartao.TipoRegra switch
-            {
-                TipoRegraPontos.PorDolar => Math.Round((valor / (cartao.CotacaoDolarReferencia > 0 ? cartao.CotacaoDolarReferencia : 5.50m)) * cartao.FatorPontuacao, 2),
-                TipoRegraPontos.PorReal => Math.Round(valor * cartao.FatorPontuacao, 2),
-                TipoRegraPontos.Cashback => Math.Round(valor * (cartao.FatorPontuacao / 100m), 2),
-                _ => 0
-            };
-        }
+        Assert.Equal(0m, pontos);
     }
 }

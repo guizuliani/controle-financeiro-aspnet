@@ -12,8 +12,11 @@ RUN mkdir -p /app/data && chown -R app:app /app/data
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# Copia o csproj e restaura as dependências aproveitando o cache de camadas do Docker
+# Copia os csprojs e restaura as dependências aproveitando o cache de camadas do Docker
 COPY ["ControleFinanceiro.csproj", "./"]
+COPY ["src/ControleFinanceiro.Domain/ControleFinanceiro.Domain.csproj", "src/ControleFinanceiro.Domain/"]
+COPY ["src/ControleFinanceiro.Application/ControleFinanceiro.Application.csproj", "src/ControleFinanceiro.Application/"]
+COPY ["src/ControleFinanceiro.Infrastructure/ControleFinanceiro.Infrastructure.csproj", "src/ControleFinanceiro.Infrastructure/"]
 RUN dotnet restore "ControleFinanceiro.csproj"
 
 # Copia o restante dos arquivos do projeto
