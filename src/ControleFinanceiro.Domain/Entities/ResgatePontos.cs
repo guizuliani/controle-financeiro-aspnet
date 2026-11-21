@@ -5,6 +5,8 @@ namespace ControleFinanceiro.Domain.Entities;
 public class ResgatePontos
 {
     public int Id { get; set; }
+    public int UsuarioId { get; set; } = 1;
+    public Usuario? Usuario { get; set; }
 
     [Required(ErrorMessage = "O cartão é obrigatório.")]
     public int CartaoCreditoId { get; set; }

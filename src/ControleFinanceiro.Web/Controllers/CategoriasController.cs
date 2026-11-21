@@ -4,7 +4,7 @@ using ControleFinanceiro.Domain.Entities;
 
 namespace ControleFinanceiro.Controllers;
 
-public class CategoriasController : Controller
+public class CategoriasController : BaseAuthController
 {
     private readonly ICategoriaService _categoriaService;
 
@@ -16,7 +16,7 @@ public class CategoriasController : Controller
     // GET: Categorias
     public async Task<IActionResult> Index()
     {
-        var categorias = await _categoriaService.ListarTodasAsync(incluirTransacoes: true);
+        var categorias = await _categoriaService.ListarTodasAsync(incluirTransacoes: true, usuarioId: UsuarioId);
         return View(categorias);
     }
 
@@ -30,6 +30,7 @@ public class CategoriasController : Controller
     {
         if (ModelState.IsValid)
         {
+            categoria.UsuarioId = UsuarioId;
             var resultado = await _categoriaService.CriarAsync(categoria);
             TempData["Sucesso"] = resultado.Mensagem;
             return RedirectToAction(nameof(Index));
@@ -42,7 +43,7 @@ public class CategoriasController : Controller
     {
         if (id == null) return NotFound();
 
-        var categoria = await _categoriaService.ObterPorIdAsync(id.Value);
+        var categoria = await _categoriaService.ObterPorIdAsync(id.Value, usuarioId: UsuarioId);
         if (categoria == null) return NotFound();
 
         return View(categoria);
@@ -57,6 +58,7 @@ public class CategoriasController : Controller
 
         if (ModelState.IsValid)
         {
+            categoria.UsuarioId = UsuarioId;
             var resultado = await _categoriaService.AtualizarAsync(categoria);
             TempData["Sucesso"] = resultado.Mensagem;
             return RedirectToAction(nameof(Index));
@@ -69,7 +71,7 @@ public class CategoriasController : Controller
     {
         if (id == null) return NotFound();
 
-        var categoria = await _categoriaService.ObterPorIdAsync(id.Value, incluirTransacoes: true);
+        var categoria = await _categoriaService.ObterPorIdAsync(id.Value, incluirTransacoes: true, usuarioId: UsuarioId);
         if (categoria == null) return NotFound();
 
         return View(categoria);
@@ -80,7 +82,7 @@ public class CategoriasController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var resultado = await _categoriaService.ExcluirAsync(id);
+        var resultado = await _categoriaService.ExcluirAsync(id, UsuarioId);
         TempData[resultado.Sucesso ? "Sucesso" : "Erro"] = resultado.Mensagem;
         return RedirectToAction(nameof(Index));
     }

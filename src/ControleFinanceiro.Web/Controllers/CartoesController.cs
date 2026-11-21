@@ -5,7 +5,7 @@ using ControleFinanceiro.Models.ViewModels;
 
 namespace ControleFinanceiro.Controllers;
 
-public class CartoesController : Controller
+public class CartoesController : BaseAuthController
 {
     private readonly ICartaoService _cartaoService;
 
@@ -18,7 +18,7 @@ public class CartoesController : Controller
     public async Task<IActionResult> Index()
     {
         var dataAtual = DateTime.Today;
-        var resumos = await _cartaoService.ListarResumosAsync(dataAtual.Month, dataAtual.Year);
+        var resumos = await _cartaoService.ListarResumosAsync(dataAtual.Month, dataAtual.Year, UsuarioId);
 
         var viewModelList = resumos.Select(c => new CartaoResumoItem
         {
@@ -46,6 +46,7 @@ public class CartoesController : Controller
     {
         if (ModelState.IsValid)
         {
+            cartao.UsuarioId = UsuarioId;
             var resultado = await _cartaoService.CriarAsync(cartao);
             TempData["Sucesso"] = resultado.Mensagem;
             return RedirectToAction(nameof(Index));
@@ -58,7 +59,7 @@ public class CartoesController : Controller
     {
         if (id == null) return NotFound();
 
-        var cartao = await _cartaoService.ObterPorIdAsync(id.Value);
+        var cartao = await _cartaoService.ObterPorIdAsync(id.Value, usuarioId: UsuarioId);
         if (cartao == null) return NotFound();
 
         return View(cartao);
@@ -73,6 +74,7 @@ public class CartoesController : Controller
 
         if (ModelState.IsValid)
         {
+            cartao.UsuarioId = UsuarioId;
             var resultado = await _cartaoService.AtualizarAsync(cartao);
             TempData["Sucesso"] = resultado.Mensagem;
             return RedirectToAction(nameof(Index));
@@ -85,7 +87,7 @@ public class CartoesController : Controller
     {
         if (id == null) return NotFound();
 
-        var cartao = await _cartaoService.ObterPorIdAsync(id.Value, incluirTransacoes: true);
+        var cartao = await _cartaoService.ObterPorIdAsync(id.Value, incluirTransacoes: true, usuarioId: UsuarioId);
         if (cartao == null) return NotFound();
 
         return View(cartao);
@@ -96,7 +98,7 @@ public class CartoesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var resultado = await _cartaoService.ExcluirAsync(id);
+        var resultado = await _cartaoService.ExcluirAsync(id, UsuarioId);
         TempData[resultado.Sucesso ? "Sucesso" : "Erro"] = resultado.Mensagem;
         return RedirectToAction(nameof(Index));
     }
@@ -108,7 +110,7 @@ public class CartoesController : Controller
         int mesFiltro = mes ?? dataAtual.Month;
         int anoFiltro = ano ?? dataAtual.Year;
 
-        var fatura = await _cartaoService.ObterFaturaAsync(id, mesFiltro, anoFiltro);
+        var fatura = await _cartaoService.ObterFaturaAsync(id, mesFiltro, anoFiltro, UsuarioId);
         if (fatura == null) return NotFound();
 
         var viewModel = new FaturaViewModel
@@ -127,7 +129,7 @@ public class CartoesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> PagarFatura(int id, int mes, int ano)
     {
-        var resultado = await _cartaoService.PagarFaturaAsync(id, mes, ano);
+        var resultado = await _cartaoService.PagarFaturaAsync(id, mes, ano, UsuarioId);
         if (!resultado.Sucesso && resultado.Mensagem == "Cartão não encontrado.")
             return NotFound();
 

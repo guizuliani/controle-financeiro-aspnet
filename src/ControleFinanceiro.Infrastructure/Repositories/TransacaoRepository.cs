@@ -22,12 +22,15 @@ public class TransacaoRepository : ITransacaoRepository
         int? categoriaId,
         int? cartaoId,
         FormaPagamento? formaPagamento,
-        string? busca)
+        string? busca,
+        int? contaBancariaId = null,
+        int usuarioId = 1)
     {
         var query = _context.Transacoes
             .Include(t => t.Categoria)
             .Include(t => t.CartaoCredito)
-            .AsQueryable();
+            .Include(t => t.ContaBancaria)
+            .Where(t => t.UsuarioId == usuarioId);
 
         if (mes.HasValue)
             query = query.Where(t => t.Data.Month == mes.Value);
@@ -44,6 +47,9 @@ public class TransacaoRepository : ITransacaoRepository
         if (cartaoId.HasValue)
             query = query.Where(t => t.CartaoCreditoId == cartaoId.Value);
 
+        if (contaBancariaId.HasValue)
+            query = query.Where(t => t.ContaBancariaId == contaBancariaId.Value);
+
         if (formaPagamento.HasValue)
             query = query.Where(t => t.FormaPagamento == formaPagamento.Value);
 
@@ -56,22 +62,23 @@ public class TransacaoRepository : ITransacaoRepository
             .ToListAsync();
     }
 
-    public Task<List<Transacao>> ListarContaCorrentePorMesAsync(int mes, int ano) =>
+    public Task<List<Transacao>> ListarContaCorrentePorMesAsync(int mes, int ano, int usuarioId = 1) =>
         _context.Transacoes
             .Include(t => t.Categoria)
-            .Where(t => t.FormaPagamento == FormaPagamento.ContaCorrente && t.Data.Month == mes && t.Data.Year == ano)
+            .Where(t => t.UsuarioId == usuarioId && t.FormaPagamento == FormaPagamento.ContaCorrente && t.Data.Month == mes && t.Data.Year == ano)
             .ToListAsync();
 
     public Task<List<Transacao>> ListarFaturaPorMesAsync(
         int mes,
         int ano,
         int? cartaoId = null,
-        bool apenasNaoPagas = false)
+        bool apenasNaoPagas = false,
+        int usuarioId = 1)
     {
         var query = _context.Transacoes
             .Include(t => t.Categoria)
             .Include(t => t.CartaoCredito)
-            .Where(t => t.FormaPagamento == FormaPagamento.CartaoCredito && t.FaturaMes == mes && t.FaturaAno == ano);
+            .Where(t => t.UsuarioId == usuarioId && t.FormaPagamento == FormaPagamento.CartaoCredito && t.FaturaMes == mes && t.FaturaAno == ano);
 
         if (cartaoId.HasValue)
             query = query.Where(t => t.CartaoCreditoId == cartaoId.Value);
@@ -82,51 +89,54 @@ public class TransacaoRepository : ITransacaoRepository
         return query.OrderBy(t => t.Data).ToListAsync();
     }
 
-    public Task<List<Transacao>> ListarDespesasCompetenciaMesAsync(int mes, int ano) =>
+    public Task<List<Transacao>> ListarDespesasCompetenciaMesAsync(int mes, int ano, int usuarioId = 1) =>
         _context.Transacoes
             .Include(t => t.Categoria)
-            .Where(t => t.Tipo == TipoTransacao.Despesa &&
+            .Where(t => t.UsuarioId == usuarioId && t.Tipo == TipoTransacao.Despesa &&
                 ((t.FormaPagamento == FormaPagamento.ContaCorrente && t.Data.Month == mes && t.Data.Year == ano) ||
                  (t.FormaPagamento == FormaPagamento.CartaoCredito && t.FaturaMes == mes && t.FaturaAno == ano)))
             .ToListAsync();
 
-    public Task<List<Transacao>> ListarUltimasAsync(int quantidade) =>
+    public Task<List<Transacao>> ListarUltimasAsync(int quantidade, int usuarioId = 1) =>
         _context.Transacoes
             .Include(t => t.Categoria)
             .Include(t => t.CartaoCredito)
+            .Include(t => t.ContaBancaria)
+            .Where(t => t.UsuarioId == usuarioId)
             .OrderByDescending(t => t.Data)
             .ThenByDescending(t => t.Id)
             .Take(quantidade)
             .ToListAsync();
 
-    public Task<List<Transacao>> ListarComPontosAsync(int quantidade) =>
+    public Task<List<Transacao>> ListarComPontosAsync(int quantidade, int usuarioId = 1) =>
         _context.Transacoes
             .Include(t => t.CartaoCredito)
             .Include(t => t.Categoria)
-            .Where(t => t.PontosGerados > 0)
+            .Where(t => t.UsuarioId == usuarioId && t.PontosGerados > 0)
             .OrderByDescending(t => t.Data)
             .Take(quantidade)
             .ToListAsync();
 
-    public Task<decimal> SomarTotalPontosGeradosAsync() =>
-        _context.Transacoes.SumAsync(t => t.PontosGerados);
+    public Task<decimal> SomarTotalPontosGeradosAsync(int usuarioId = 1) =>
+        _context.Transacoes.Where(t => t.UsuarioId == usuarioId).SumAsync(t => t.PontosGerados);
 
-    public Task<Transacao?> ObterPorIdAsync(int id, bool incluirRelacionamentos = false)
+    public Task<Transacao?> ObterPorIdAsync(int id, bool incluirRelacionamentos = false, int usuarioId = 1)
     {
-        var query = _context.Transacoes.AsQueryable();
+        var query = _context.Transacoes.Where(t => t.UsuarioId == usuarioId);
 
         if (incluirRelacionamentos)
         {
             query = query
                 .Include(t => t.Categoria)
-                .Include(t => t.CartaoCredito);
+                .Include(t => t.CartaoCredito)
+                .Include(t => t.ContaBancaria);
         }
 
         return query.FirstOrDefaultAsync(t => t.Id == id);
     }
 
-    public Task<bool> ExisteAsync(int id) =>
-        _context.Transacoes.AnyAsync(t => t.Id == id);
+    public Task<bool> ExisteAsync(int id, int usuarioId = 1) =>
+        _context.Transacoes.AnyAsync(t => t.Id == id && t.UsuarioId == usuarioId);
 
     public async Task AdicionarAsync(Transacao transacao) =>
         await _context.Transacoes.AddAsync(transacao);

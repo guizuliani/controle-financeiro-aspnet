@@ -5,6 +5,8 @@ namespace ControleFinanceiro.Domain.Entities;
 public class Categoria
 {
     public int Id { get; set; }
+    public int UsuarioId { get; set; } = 1;
+    public Usuario? Usuario { get; set; }
 
     [Required(ErrorMessage = "O nome da categoria é obrigatório.")]
     [StringLength(50, ErrorMessage = "O nome pode ter no máximo 50 caracteres.")]

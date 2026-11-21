@@ -14,6 +14,8 @@ public class DashboardDto
     public List<Transacao> UltimasTransacoes { get; set; } = new();
     public List<GraficoCategoriaDto> DespesasPorCategoria { get; set; } = new();
     public List<CartaoResumoDto> CartoesResumo { get; set; } = new();
+    public List<ContaBancariaResumoDto> ContasResumo { get; set; } = new();
+    public List<OrcamentoResumoDto> OrcamentosResumo { get; set; } = new();
 }
 
 public class GraficoCategoriaDto

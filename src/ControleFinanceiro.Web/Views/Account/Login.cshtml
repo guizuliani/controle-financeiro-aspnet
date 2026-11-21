@@ -1,0 +1,54 @@
+@model ControleFinanceiro.Models.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Entrar";
+}
+
+<div class="min-h-[75vh] flex items-center justify-center">
+    <div class="w-full max-w-md card-fintech p-8">
+        <div class="text-center mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white mx-auto mb-3 shadow-lg shadow-blue-500/30">
+                <i class="bi bi-wallet2 text-2xl"></i>
+            </div>
+            <h1 class="text-2xl font-extrabold text-slate-900">Entrar no FinanceControl</h1>
+            <p class="text-sm text-slate-500 mt-1">Acesse seu painel financeiro pessoal</p>
+        </div>
+
+        <form asp-action="Login" method="post" class="space-y-4">
+            <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+            <div asp-validation-summary="ModelOnly" class="text-sm text-rose-600 bg-rose-50 border border-rose-200 rounded-xl p-3"></div>
+
+            <div>
+                <label asp-for="Email" class="block mb-1.5 text-sm font-semibold text-slate-700">E-mail</label>
+                <input asp-for="Email" type="email" class="bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="seu@email.com" />
+                <span asp-validation-for="Email" class="text-xs text-rose-600"></span>
+            </div>
+
+            <div>
+                <label asp-for="Senha" class="block mb-1.5 text-sm font-semibold text-slate-700">Senha</label>
+                <input asp-for="Senha" type="password" class="bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="••••••••" />
+                <span asp-validation-for="Senha" class="text-xs text-rose-600"></span>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <label class="inline-flex items-center gap-2 text-sm text-slate-600">
+                    <input asp-for="LembrarMe" type="checkbox" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
+                    <span>Manter conectado</span>
+                </label>
+                <a asp-action="Register" class="text-sm font-semibold text-blue-600 hover:underline">Criar conta</a>
+            </div>
+
+            <button type="submit" class="w-full text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 font-semibold rounded-xl text-sm px-5 py-3 text-center shadow-lg shadow-blue-600/20 transition-all">
+                Entrar
+            </button>
+        </form>
+
+        <div class="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-500">
+            <p class="font-medium text-slate-600 mb-1">Acesso inicial padrão:</p>
+            <code>admin@financecontrol.local</code> &bull; <code>Admin@123</code>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -13,12 +13,15 @@ public interface ITransacaoService
         int? categoriaId,
         int? cartaoId,
         FormaPagamento? formaPagamento,
-        string? busca);
+        string? busca,
+        int? contaBancariaId = null,
+        int usuarioId = 1);
 
-    Task<Transacao?> ObterPorIdAsync(int id, bool incluirRelacionamentos = false);
-    Task<List<Categoria>> ListarCategoriasParaSelecaoAsync();
-    Task<List<CartaoCredito>> ListarCartoesParaSelecaoAsync();
+    Task<Transacao?> ObterPorIdAsync(int id, bool incluirRelacionamentos = false, int usuarioId = 1);
+    Task<List<Categoria>> ListarCategoriasParaSelecaoAsync(int usuarioId = 1);
+    Task<List<CartaoCredito>> ListarCartoesParaSelecaoAsync(int usuarioId = 1);
+    Task<List<ContaBancaria>> ListarContasParaSelecaoAsync(int usuarioId = 1);
     Task<ResultadoOperacao> CriarAsync(Transacao transacao);
     Task<ResultadoOperacao> AtualizarAsync(Transacao transacao);
-    Task<ResultadoOperacao> ExcluirAsync(int id);
+    Task<ResultadoOperacao> ExcluirAsync(int id, int usuarioId = 1);
 }

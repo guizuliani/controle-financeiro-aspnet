@@ -31,6 +31,7 @@ public class TransacoesControllerIntegrationTests
             new TransacaoRepository(context),
             new CartaoCreditoRepository(context),
             new CategoriaRepository(context),
+            new ContaBancariaRepository(context),
             new UnitOfWork(context));
 
         var controller = new TransacoesController(service);

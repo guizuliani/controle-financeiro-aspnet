@@ -25,9 +25,9 @@ public class CartaoService : ICartaoService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<List<CartaoResumoDto>> ListarResumosAsync(int mes, int ano)
+    public async Task<List<CartaoResumoDto>> ListarResumosAsync(int mes, int ano, int usuarioId = 1)
     {
-        var cartoes = await _cartaoRepository.ListarTodosOrdenadosPorNomeAsync(incluirTransacoes: true);
+        var cartoes = await _cartaoRepository.ListarTodosOrdenadosPorNomeAsync(incluirTransacoes: true, usuarioId: usuarioId);
 
         return cartoes.Select(c => new CartaoResumoDto
         {
@@ -45,8 +45,8 @@ public class CartaoService : ICartaoService
         }).ToList();
     }
 
-    public Task<CartaoCredito?> ObterPorIdAsync(int id, bool incluirTransacoes = false) =>
-        _cartaoRepository.ObterPorIdAsync(id, incluirTransacoes);
+    public Task<CartaoCredito?> ObterPorIdAsync(int id, bool incluirTransacoes = false, int usuarioId = 1) =>
+        _cartaoRepository.ObterPorIdAsync(id, incluirTransacoes, usuarioId: usuarioId);
 
     public async Task<ResultadoOperacao> CriarAsync(CartaoCredito cartao)
     {
@@ -62,9 +62,9 @@ public class CartaoService : ICartaoService
         return ResultadoOperacao.Ok("Cartão de crédito atualizado com sucesso!");
     }
 
-    public async Task<ResultadoOperacao> ExcluirAsync(int id)
+    public async Task<ResultadoOperacao> ExcluirAsync(int id, int usuarioId = 1)
     {
-        var cartao = await _cartaoRepository.ObterPorIdAsync(id, incluirTransacoes: true);
+        var cartao = await _cartaoRepository.ObterPorIdAsync(id, incluirTransacoes: true, usuarioId: usuarioId);
         if (cartao == null)
             return ResultadoOperacao.Falha("Cartão não encontrado.");
 
@@ -76,13 +76,13 @@ public class CartaoService : ICartaoService
         return ResultadoOperacao.Ok("Cartão de crédito excluído com sucesso!");
     }
 
-    public async Task<FaturaDto?> ObterFaturaAsync(int cartaoId, int mes, int ano)
+    public async Task<FaturaDto?> ObterFaturaAsync(int cartaoId, int mes, int ano, int usuarioId = 1)
     {
-        var cartao = await _cartaoRepository.ObterPorIdAsync(cartaoId);
+        var cartao = await _cartaoRepository.ObterPorIdAsync(cartaoId, usuarioId: usuarioId);
         if (cartao == null)
             return null;
 
-        var transacoes = await _transacaoRepository.ListarFaturaPorMesAsync(mes, ano, cartaoId);
+        var transacoes = await _transacaoRepository.ListarFaturaPorMesAsync(mes, ano, cartaoId, usuarioId: usuarioId);
 
         return new FaturaDto
         {
@@ -93,13 +93,13 @@ public class CartaoService : ICartaoService
         };
     }
 
-    public async Task<ResultadoOperacao> PagarFaturaAsync(int cartaoId, int mes, int ano)
+    public async Task<ResultadoOperacao> PagarFaturaAsync(int cartaoId, int mes, int ano, int usuarioId = 1)
     {
-        var cartao = await _cartaoRepository.ObterPorIdAsync(cartaoId);
+        var cartao = await _cartaoRepository.ObterPorIdAsync(cartaoId, usuarioId: usuarioId);
         if (cartao == null)
             return ResultadoOperacao.Falha("Cartão não encontrado.");
 
-        var transacoes = await _transacaoRepository.ListarFaturaPorMesAsync(mes, ano, cartaoId, apenasNaoPagas: true);
+        var transacoes = await _transacaoRepository.ListarFaturaPorMesAsync(mes, ano, cartaoId, apenasNaoPagas: true, usuarioId: usuarioId);
         if (!transacoes.Any())
             return ResultadoOperacao.Falha("Esta fatura já está paga ou não possui lançamentos a quitar.");
 
@@ -110,11 +110,12 @@ public class CartaoService : ICartaoService
             t.FaturaPaga = true;
         }
 
-        var categoriaOutros = await _categoriaRepository.ObterCategoriaPagamentoFaturaAsync();
+        var categoriaOutros = await _categoriaRepository.ObterCategoriaPagamentoFaturaAsync(usuarioId);
         int categoriaId = categoriaOutros?.Id ?? 8;
 
         var pagamentoTransacao = new Transacao
         {
+            UsuarioId = usuarioId,
             Descricao = $"Pagamento Fatura {cartao.Nome} ({mes:D2}/{ano})",
             Valor = totalFatura,
             Data = DateTime.Today,

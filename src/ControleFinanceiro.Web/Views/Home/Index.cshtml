@@ -115,6 +115,69 @@
     </div>
 </div>
 
+<!-- Contas Bancárias & Alertas de Orçamento -->
+@if (Model.ContasResumo.Any() || Model.OrcamentosResumo.Any())
+{
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        @if (Model.ContasResumo.Any())
+        {
+            <div class="card-fintech p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="bi bi-bank text-blue-600"></i> Contas & Carteiras
+                    </h2>
+                    <a asp-controller="Contas" asp-action="Index" class="text-sm font-semibold text-blue-600 hover:underline">Gerenciar</a>
+                </div>
+                <div class="space-y-2.5">
+                    @foreach (var conta in Model.ContasResumo)
+                    {
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-3 h-3 rounded-full" style="background-color:@conta.CorHex"></span>
+                                <div>
+                                    <span class="font-semibold text-sm text-slate-800 block">@conta.Nome</span>
+                                    <span class="text-xs text-slate-400">@conta.Instituicao</span>
+                                </div>
+                            </div>
+                            <span class="font-bold text-sm @(conta.SaldoAtual >= 0 ? "text-emerald-600" : "text-rose-600")">
+                                @conta.SaldoAtual.ToString("C", culturaBr)
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.OrcamentosResumo.Any())
+        {
+            <div class="card-fintech p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="bi bi-bullseye text-blue-600"></i> Metas do Mês
+                    </h2>
+                    <a asp-controller="Orcamentos" asp-action="Index" class="text-sm font-semibold text-blue-600 hover:underline">Ver todas</a>
+                </div>
+                <div class="space-y-3">
+                    @foreach (var orc in Model.OrcamentosResumo.Take(4))
+                    {
+                        var barColor = orc.NivelAlerta == "Excedido" ? "bg-rose-600" : (orc.NivelAlerta == "Atencao" ? "bg-amber-500" : "bg-emerald-500");
+                        var pctVisual = Math.Min(100m, orc.PercentualUso);
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-700">@orc.CategoriaNome</span>
+                                <span class="text-slate-500">@orc.ValorGasto.ToString("C", culturaBr) / @orc.ValorLimite.ToString("C", culturaBr) (@orc.PercentualUso.ToString("N0")%)</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                                <div class="@barColor h-2 rounded-full" style="width: @pctVisual.ToString("0.#", CultureInfo.InvariantCulture)%"></div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
 <!-- Seção dos Cartões de Crédito (Uso do Limite) -->
 @if (Model.CartoesResumo.Any())
 {

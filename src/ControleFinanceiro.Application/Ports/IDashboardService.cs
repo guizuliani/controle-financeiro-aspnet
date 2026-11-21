@@ -4,5 +4,5 @@ namespace ControleFinanceiro.Application.Ports;
 
 public interface IDashboardService
 {
-    Task<DashboardDto> ObterDashboardAsync(int mes, int ano);
+    Task<DashboardDto> ObterDashboardAsync(int mes, int ano, int usuarioId = 1);
 }

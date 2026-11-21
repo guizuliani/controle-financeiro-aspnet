@@ -24,9 +24,9 @@ public class PontosService : IPontosService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<PontosPainelDto> ObterPainelPontosAsync()
+    public async Task<PontosPainelDto> ObterPainelPontosAsync(int usuarioId = 1)
     {
-        var cartoes = await _cartaoRepository.ListarComPontosAsync(incluirTransacoesEResgates: true);
+        var cartoes = await _cartaoRepository.ListarComPontosAsync(incluirTransacoesEResgates: true, usuarioId: usuarioId);
 
         var programas = cartoes.Select(c => new ProgramaPontosDto
         {
@@ -39,8 +39,8 @@ public class PontosService : IPontosService
             RegraDescricao = c.ObterDescricaoRegraPontos()
         }).ToList();
 
-        var extratoTransacoes = await _transacaoRepository.ListarComPontosAsync(25);
-        var historicoResgates = await _resgateRepository.ListarUltimosAsync(25);
+        var extratoTransacoes = await _transacaoRepository.ListarComPontosAsync(25, usuarioId);
+        var historicoResgates = await _resgateRepository.ListarUltimosAsync(25, usuarioId);
 
         return new PontosPainelDto
         {
@@ -50,15 +50,16 @@ public class PontosService : IPontosService
         };
     }
 
-    public Task<List<CartaoCredito>> ListarCartoesComPontosAsync() =>
-        _cartaoRepository.ListarComPontosAsync();
+    public Task<List<CartaoCredito>> ListarCartoesComPontosAsync(int usuarioId = 1) =>
+        _cartaoRepository.ListarComPontosAsync(usuarioId: usuarioId);
 
     public async Task<ResultadoOperacao> ResgatarPontosAsync(ResgatePontos resgate)
     {
         var cartao = await _cartaoRepository.ObterPorIdAsync(
             resgate.CartaoCreditoId,
             incluirTransacoes: true,
-            incluirResgates: true);
+            incluirResgates: true,
+            usuarioId: resgate.UsuarioId);
 
         if (cartao != null)
         {

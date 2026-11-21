@@ -16,11 +16,11 @@ public class CategoriaService : ICategoriaService
         _unitOfWork = unitOfWork;
     }
 
-    public Task<List<Categoria>> ListarTodasAsync(bool incluirTransacoes = false) =>
-        _categoriaRepository.ListarTodasOrdenadasPorNomeAsync(incluirTransacoes);
+    public Task<List<Categoria>> ListarTodasAsync(bool incluirTransacoes = false, int usuarioId = 1) =>
+        _categoriaRepository.ListarTodasOrdenadasPorNomeAsync(incluirTransacoes, usuarioId);
 
-    public Task<Categoria?> ObterPorIdAsync(int id, bool incluirTransacoes = false) =>
-        _categoriaRepository.ObterPorIdAsync(id, incluirTransacoes);
+    public Task<Categoria?> ObterPorIdAsync(int id, bool incluirTransacoes = false, int usuarioId = 1) =>
+        _categoriaRepository.ObterPorIdAsync(id, incluirTransacoes, usuarioId);
 
     public async Task<ResultadoOperacao> CriarAsync(Categoria categoria)
     {
@@ -36,9 +36,9 @@ public class CategoriaService : ICategoriaService
         return ResultadoOperacao.Ok("Categoria atualizada com sucesso!");
     }
 
-    public async Task<ResultadoOperacao> ExcluirAsync(int id)
+    public async Task<ResultadoOperacao> ExcluirAsync(int id, int usuarioId = 1)
     {
-        var categoria = await _categoriaRepository.ObterPorIdAsync(id, incluirTransacoes: true);
+        var categoria = await _categoriaRepository.ObterPorIdAsync(id, incluirTransacoes: true, usuarioId);
         if (categoria == null)
             return ResultadoOperacao.Falha("Categoria não encontrada.");
 

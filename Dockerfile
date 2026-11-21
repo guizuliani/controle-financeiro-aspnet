@@ -35,4 +35,7 @@ COPY --chown=app:app --from=publish /app/publish .
 # Executa com usuário não-privilegiado
 USER app
 
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD bash -c "exec 3<>/dev/tcp/127.0.0.1/8080" || exit 1
+
 ENTRYPOINT ["dotnet", "ControleFinanceiro.dll"]

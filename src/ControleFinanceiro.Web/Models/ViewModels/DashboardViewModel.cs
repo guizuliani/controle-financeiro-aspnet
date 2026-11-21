@@ -1,3 +1,4 @@
+using ControleFinanceiro.Application.DTOs;
 using ControleFinanceiro.Domain.Entities;
 
 namespace ControleFinanceiro.Models.ViewModels
@@ -17,6 +18,8 @@ namespace ControleFinanceiro.Models.ViewModels
         public List<Transacao> UltimasTransacoes { get; set; } = new();
         public List<GraficoCategoriaItem> DespesasPorCategoria { get; set; } = new();
         public List<CartaoResumoItem> CartoesResumo { get; set; } = new();
+        public List<ContaBancariaResumoDto> ContasResumo { get; set; } = new();
+        public List<OrcamentoResumoDto> OrcamentosResumo { get; set; } = new();
     }
 
     public class GraficoCategoriaItem

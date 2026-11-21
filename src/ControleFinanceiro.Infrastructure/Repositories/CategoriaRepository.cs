@@ -14,9 +14,9 @@ public class CategoriaRepository : ICategoriaRepository
         _context = context;
     }
 
-    public Task<List<Categoria>> ListarTodasOrdenadasPorNomeAsync(bool incluirTransacoes = false)
+    public Task<List<Categoria>> ListarTodasOrdenadasPorNomeAsync(bool incluirTransacoes = false, int usuarioId = 1)
     {
-        var query = _context.Categorias.AsQueryable();
+        var query = _context.Categorias.Where(c => c.UsuarioId == usuarioId);
 
         if (incluirTransacoes)
             query = query.Include(c => c.Transacoes);
@@ -24,9 +24,9 @@ public class CategoriaRepository : ICategoriaRepository
         return query.OrderBy(c => c.Nome).ToListAsync();
     }
 
-    public Task<Categoria?> ObterPorIdAsync(int id, bool incluirTransacoes = false)
+    public Task<Categoria?> ObterPorIdAsync(int id, bool incluirTransacoes = false, int usuarioId = 1)
     {
-        var query = _context.Categorias.AsQueryable();
+        var query = _context.Categorias.Where(c => c.UsuarioId == usuarioId);
 
         if (incluirTransacoes)
             query = query.Include(c => c.Transacoes);
@@ -34,14 +34,21 @@ public class CategoriaRepository : ICategoriaRepository
         return query.FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    public Task<Categoria?> ObterCategoriaPagamentoFaturaAsync() =>
-        _context.Categorias.FirstOrDefaultAsync(c => c.Nome.Contains("Moradia") || c.Nome.Contains("Outros"));
+    public Task<Categoria?> ObterCategoriaPagamentoFaturaAsync(int usuarioId = 1) =>
+        _context.Categorias
+            .Where(c => c.UsuarioId == usuarioId)
+            .FirstOrDefaultAsync(c => c.Nome.Contains("Moradia") || c.Nome.Contains("Outros"))
+            .ContinueWith(async t => await t ?? await _context.Categorias.FirstOrDefaultAsync(c => c.UsuarioId == usuarioId))
+            .Unwrap();
 
-    public Task<bool> ExisteAsync(int id) =>
-        _context.Categorias.AnyAsync(c => c.Id == id);
+    public Task<bool> ExisteAsync(int id, int usuarioId = 1) =>
+        _context.Categorias.AnyAsync(c => c.Id == id && c.UsuarioId == usuarioId);
 
     public async Task AdicionarAsync(Categoria categoria) =>
         await _context.Categorias.AddAsync(categoria);
+
+    public async Task AdicionarVariasAsync(IEnumerable<Categoria> categorias) =>
+        await _context.Categorias.AddRangeAsync(categorias);
 
     public void Atualizar(Categoria categoria) =>
         _context.Categorias.Update(categoria);

@@ -4,43 +4,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - FinanceControl</title>
-    
+
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Bootstrap Icons (ótima biblioteca para ícones de finanças) -->
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <!-- Tailwind CSS (Play CDN com configuração personalizada) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            200: '#bfdbfe',
-                            300: '#93c5fd',
-                            400: '#60a5fa',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            800: '#1e40af',
-                            900: '#1e3a8a',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Tailwind CSS Compilado (Produção) -->
+    <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
 
     <!-- Flowbite CSS -->
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
@@ -76,47 +50,78 @@
                 </div>
                 <span class="self-center text-xl font-bold whitespace-nowrap text-white tracking-tight">Finance<span class="text-blue-500">Control</span></span>
             </a>
-            
-            <div class="flex items-center md:order-2 space-x-3 md:space-x-2 rtl:space-x-reverse">
-                <a asp-controller="Transacoes" asp-action="Create" class="text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-4 py-2.5 text-center inline-flex items-center gap-2 shadow-lg shadow-blue-600/20 transition-all duration-200 hover:-translate-y-0.5">
-                    <i class="bi bi-plus-circle-fill"></i>
-                    <span>Nova Transação</span>
-                </a>
-                <button data-collapse-toggle="navbar-sticky" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-slate-400 rounded-lg md:hidden hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600" aria-controls="navbar-sticky" aria-expanded="false">
-                    <span class="sr-only">Abrir menu</span>
-                    <i class="bi bi-list text-2xl"></i>
-                </button>
-            </div>
 
-            <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
-                <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-slate-800 rounded-xl bg-slate-900 md:space-x-1 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
-                    <li>
-                        <a asp-controller="Home" asp-action="Index" class="flex items-center gap-2 py-2 px-3 text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
-                            <i class="bi bi-speedometer2"></i> Dashboard
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-controller="Transacoes" asp-action="Index" class="flex items-center gap-2 py-2 px-3 text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
-                            <i class="bi bi-arrow-down-up"></i> Transações
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-controller="Cartoes" asp-action="Index" class="flex items-center gap-2 py-2 px-3 text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
-                            <i class="bi bi-credit-card-2-front"></i> Cartões
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-controller="Pontos" asp-action="Index" class="flex items-center gap-2 py-2 px-3 text-amber-400 rounded-lg hover:bg-slate-800 hover:text-amber-300 transition-colors">
-                            <i class="bi bi-stars"></i> Pontos & Milhas
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-controller="Categorias" asp-action="Index" class="flex items-center gap-2 py-2 px-3 text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
-                            <i class="bi bi-tags"></i> Categorias
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="flex items-center md:order-2 space-x-2 rtl:space-x-reverse">
+                    <a asp-controller="Transacoes" asp-action="Create" class="text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-xs sm:text-sm px-3.5 py-2 text-center inline-flex items-center gap-1.5 shadow-lg shadow-blue-600/20 transition-all">
+                        <i class="bi bi-plus-circle-fill"></i>
+                        <span class="hidden sm:inline">Nova Transação</span>
+                    </a>
+
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="inline">
+                        <button type="submit" title="Sair (@User.Identity.Name)" class="text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-xl text-xs px-3 py-2 inline-flex items-center gap-1.5 transition-colors">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span class="hidden lg:inline">@User.Identity.Name</span>
+                        </button>
+                    </form>
+
+                    <button data-collapse-toggle="navbar-sticky" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-slate-400 rounded-lg md:hidden hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600" aria-controls="navbar-sticky" aria-expanded="false">
+                        <span class="sr-only">Abrir menu</span>
+                        <i class="bi bi-list text-2xl"></i>
+                    </button>
+                </div>
+
+                <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
+                    <ul class="flex flex-col p-4 md:p-0 mt-4 text-sm font-medium border border-slate-800 rounded-xl bg-slate-900 md:space-x-1 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+                        <li>
+                            <a asp-controller="Home" asp-action="Index" class="flex items-center gap-1.5 py-2 px-2.5 text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Transacoes" asp-action="Index" class="flex items-center gap-1.5 py-2 px-2.5 text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
+                                <i class="bi bi-arrow-down-up"></i> Transações
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Contas" asp-action="Index" class="flex items-center gap-1.5 py-2 px-2.5 text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
+                                <i class="bi bi-bank"></i> Contas
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Cartoes" asp-action="Index" class="flex items-center gap-1.5 py-2 px-2.5 text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
+                                <i class="bi bi-credit-card-2-front"></i> Cartões
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Orcamentos" asp-action="Index" class="flex items-center gap-1.5 py-2 px-2.5 text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
+                                <i class="bi bi-bullseye"></i> Metas
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Recorrencias" asp-action="Index" class="flex items-center gap-1.5 py-2 px-2.5 text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
+                                <i class="bi bi-arrow-repeat"></i> Fixas
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Pontos" asp-action="Index" class="flex items-center gap-1.5 py-2 px-2.5 text-amber-400 rounded-lg hover:bg-slate-800 hover:text-amber-300 transition-colors">
+                                <i class="bi bi-stars"></i> Pontos
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Categorias" asp-action="Index" class="flex items-center gap-1.5 py-2 px-2.5 text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
+                                <i class="bi bi-tags"></i> Categorias
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Importacao" asp-action="Index" class="flex items-center gap-1.5 py-2 px-2.5 text-slate-300 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
+                                <i class="bi bi-file-earmark-arrow-up"></i> CSV/OFX
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            }
         </div>
     </nav>
 
@@ -152,7 +157,7 @@
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 py-6 mt-auto">
         <div class="max-w-7xl mx-auto px-4 text-center text-sm text-slate-500">
-            &copy; @DateTime.Now.Year <span class="font-bold text-slate-700">FinanceControl</span> (.NET 10 MVC) | Tailwind CSS & Flowbite
+            &copy; @DateTime.Now.Year <span class="font-bold text-slate-700">FinanceControl</span> (.NET 10 MVC) | Arquitetura Hexagonal &bull; Tailwind CSS & Flowbite
         </div>
     </footer>
 

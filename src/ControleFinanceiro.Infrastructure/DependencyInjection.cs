@@ -18,18 +18,27 @@ public static class DependencyInjection
             options.UseSqlite(connectionString));
 
         // Driven Ports -> Driven Adapters (Repositories & UnitOfWork)
+        services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+        services.AddScoped<IContaBancariaRepository, ContaBancariaRepository>();
         services.AddScoped<ICartaoCreditoRepository, CartaoCreditoRepository>();
         services.AddScoped<ICategoriaRepository, CategoriaRepository>();
         services.AddScoped<ITransacaoRepository, TransacaoRepository>();
         services.AddScoped<IResgatePontosRepository, ResgatePontosRepository>();
+        services.AddScoped<IOrcamentoRepository, OrcamentoRepository>();
+        services.AddScoped<ILancamentoRecorrenteRepository, LancamentoRecorrenteRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Driving Ports -> Application Use Cases
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IDashboardService, DashboardService>();
         services.AddScoped<ITransacaoService, TransacaoService>();
         services.AddScoped<ICartaoService, CartaoService>();
         services.AddScoped<ICategoriaService, CategoriaService>();
         services.AddScoped<IPontosService, PontosService>();
+        services.AddScoped<IContaBancariaService, ContaBancariaService>();
+        services.AddScoped<IOrcamentoService, OrcamentoService>();
+        services.AddScoped<ILancamentoRecorrenteService, LancamentoRecorrenteService>();
+        services.AddScoped<IExtratoPortabilidadeService, ExtratoPortabilidadeService>();
 
         return services;
     }
@@ -50,6 +59,6 @@ public static class DependencyInjection
             }
         }
 
-        context.Database.EnsureCreated();
+        context.Database.Migrate();
     }
 }

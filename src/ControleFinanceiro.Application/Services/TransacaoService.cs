@@ -11,17 +11,20 @@ public class TransacaoService : ITransacaoService
     private readonly ITransacaoRepository _transacaoRepository;
     private readonly ICartaoCreditoRepository _cartaoRepository;
     private readonly ICategoriaRepository _categoriaRepository;
+    private readonly IContaBancariaRepository _contaRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public TransacaoService(
         ITransacaoRepository transacaoRepository,
         ICartaoCreditoRepository cartaoRepository,
         ICategoriaRepository categoriaRepository,
+        IContaBancariaRepository contaRepository,
         IUnitOfWork unitOfWork)
     {
         _transacaoRepository = transacaoRepository;
         _cartaoRepository = cartaoRepository;
         _categoriaRepository = categoriaRepository;
+        _contaRepository = contaRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -32,17 +35,22 @@ public class TransacaoService : ITransacaoService
         int? categoriaId,
         int? cartaoId,
         FormaPagamento? formaPagamento,
-        string? busca) =>
-        _transacaoRepository.ListarFiltradasAsync(mes, ano, tipo, categoriaId, cartaoId, formaPagamento, busca);
+        string? busca,
+        int? contaBancariaId = null,
+        int usuarioId = 1) =>
+        _transacaoRepository.ListarFiltradasAsync(mes, ano, tipo, categoriaId, cartaoId, formaPagamento, busca, contaBancariaId, usuarioId);
 
-    public Task<Transacao?> ObterPorIdAsync(int id, bool incluirRelacionamentos = false) =>
-        _transacaoRepository.ObterPorIdAsync(id, incluirRelacionamentos);
+    public Task<Transacao?> ObterPorIdAsync(int id, bool incluirRelacionamentos = false, int usuarioId = 1) =>
+        _transacaoRepository.ObterPorIdAsync(id, incluirRelacionamentos, usuarioId);
 
-    public Task<List<Categoria>> ListarCategoriasParaSelecaoAsync() =>
-        _categoriaRepository.ListarTodasOrdenadasPorNomeAsync();
+    public Task<List<Categoria>> ListarCategoriasParaSelecaoAsync(int usuarioId = 1) =>
+        _categoriaRepository.ListarTodasOrdenadasPorNomeAsync(usuarioId: usuarioId);
 
-    public Task<List<CartaoCredito>> ListarCartoesParaSelecaoAsync() =>
-        _cartaoRepository.ListarTodosOrdenadosPorNomeAsync();
+    public Task<List<CartaoCredito>> ListarCartoesParaSelecaoAsync(int usuarioId = 1) =>
+        _cartaoRepository.ListarTodosOrdenadosPorNomeAsync(usuarioId: usuarioId);
+
+    public Task<List<ContaBancaria>> ListarContasParaSelecaoAsync(int usuarioId = 1) =>
+        _contaRepository.ListarPorUsuarioAsync(usuarioId);
 
     public async Task<ResultadoOperacao> CriarAsync(Transacao transacao)
     {
@@ -55,7 +63,7 @@ public class TransacaoService : ITransacaoService
                     nameof(Transacao.CartaoCreditoId));
             }
 
-            var cartao = await _cartaoRepository.ObterPorIdAsync(transacao.CartaoCreditoId.Value);
+            var cartao = await _cartaoRepository.ObterPorIdAsync(transacao.CartaoCreditoId.Value, usuarioId: transacao.UsuarioId);
             if (cartao != null)
             {
                 var parcelas = Transacao.GerarParcelasCartao(transacao, cartao);
@@ -80,10 +88,11 @@ public class TransacaoService : ITransacaoService
     {
         if (transacao.FormaPagamento == FormaPagamento.CartaoCredito && transacao.CartaoCreditoId.HasValue)
         {
-            var cartao = await _cartaoRepository.ObterPorIdAsync(transacao.CartaoCreditoId.Value);
+            var cartao = await _cartaoRepository.ObterPorIdAsync(transacao.CartaoCreditoId.Value, usuarioId: transacao.UsuarioId);
             if (cartao != null)
             {
                 transacao.PontosGerados = cartao.CalcularPontos(transacao.Valor);
+                transacao.ContaBancariaId = null;
             }
         }
         else
@@ -97,9 +106,9 @@ public class TransacaoService : ITransacaoService
         return ResultadoOperacao.Ok("Transação atualizada com sucesso!");
     }
 
-    public async Task<ResultadoOperacao> ExcluirAsync(int id)
+    public async Task<ResultadoOperacao> ExcluirAsync(int id, int usuarioId = 1)
     {
-        var transacao = await _transacaoRepository.ObterPorIdAsync(id);
+        var transacao = await _transacaoRepository.ObterPorIdAsync(id, usuarioId: usuarioId);
         if (transacao == null)
             return ResultadoOperacao.Falha("Transação não encontrada.");
 

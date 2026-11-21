@@ -81,6 +81,13 @@
                 </div>
 
                 <div>
+                    <label asp-for="ContaBancariaId" class="block mb-2 text-sm font-medium text-slate-700">Conta Bancária (à vista)</label>
+                    <select asp-for="ContaBancariaId" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" asp-items="ViewBag.ContaBancariaId">
+                        <option value="">-- Padrão --</option>
+                    </select>
+                </div>
+
+                <div>
                     <label asp-for="Data" class="block mb-2 text-sm font-medium text-slate-700">Data da Operação</label>
                     <input asp-for="Data" type="date" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                     <span asp-validation-for="Data" class="text-rose-500 text-xs mt-1 block"></span>

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ControleFinanceiro.Application.Ports;
 using ControleFinanceiro.Models;
@@ -6,7 +7,7 @@ using ControleFinanceiro.Models.ViewModels;
 
 namespace ControleFinanceiro.Controllers;
 
-public class HomeController : Controller
+public class HomeController : BaseAuthController
 {
     private readonly IDashboardService _dashboardService;
 
@@ -21,7 +22,7 @@ public class HomeController : Controller
         int mesFiltro = mes ?? dataAtual.Month;
         int anoFiltro = ano ?? dataAtual.Year;
 
-        var dto = await _dashboardService.ObterDashboardAsync(mesFiltro, anoFiltro);
+        var dto = await _dashboardService.ObterDashboardAsync(mesFiltro, anoFiltro, UsuarioId);
 
         var viewModel = new DashboardViewModel
         {
@@ -49,14 +50,18 @@ public class HomeController : Controller
                 DiaFechamento = c.DiaFechamento,
                 DiaVencimento = c.DiaVencimento,
                 NomeProgramaPontos = c.NomeProgramaPontos
-            }).ToList()
+            }).ToList(),
+            ContasResumo = dto.ContasResumo,
+            OrcamentosResumo = dto.OrcamentosResumo
         };
 
         return View(viewModel);
     }
 
+    [AllowAnonymous]
     public IActionResult Privacy() => View();
 
+    [AllowAnonymous]
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

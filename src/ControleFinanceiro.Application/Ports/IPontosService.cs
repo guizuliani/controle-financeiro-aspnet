@@ -5,7 +5,7 @@ namespace ControleFinanceiro.Application.Ports;
 
 public interface IPontosService
 {
-    Task<PontosPainelDto> ObterPainelPontosAsync();
-    Task<List<CartaoCredito>> ListarCartoesComPontosAsync();
+    Task<PontosPainelDto> ObterPainelPontosAsync(int usuarioId = 1);
+    Task<List<CartaoCredito>> ListarCartoesComPontosAsync(int usuarioId = 1);
     Task<ResultadoOperacao> ResgatarPontosAsync(ResgatePontos resgate);
 }

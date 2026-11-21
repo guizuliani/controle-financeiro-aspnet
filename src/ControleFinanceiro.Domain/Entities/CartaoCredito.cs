@@ -6,6 +6,8 @@ namespace ControleFinanceiro.Domain.Entities;
 public class CartaoCredito
 {
     public int Id { get; set; }
+    public int UsuarioId { get; set; } = 1;
+    public Usuario? Usuario { get; set; }
 
     [Required(ErrorMessage = "O nome do cartão é obrigatório.")]
     [StringLength(50, ErrorMessage = "O nome pode ter no máximo 50 caracteres.")]

@@ -6,6 +6,8 @@ namespace ControleFinanceiro.Domain.Entities;
 public class Transacao
 {
     public int Id { get; set; }
+    public int UsuarioId { get; set; } = 1;
+    public Usuario? Usuario { get; set; }
 
     [Required(ErrorMessage = "A descrição é obrigatória.")]
     [StringLength(100, ErrorMessage = "A descrição pode ter no máximo 100 caracteres.")]
@@ -33,6 +35,11 @@ public class Transacao
     // --- Cartão de Crédito e Parcelamento ---
     [Display(Name = "Forma de Pagamento")]
     public FormaPagamento FormaPagamento { get; set; } = FormaPagamento.ContaCorrente;
+
+    [Display(Name = "Conta Bancária")]
+    public int? ContaBancariaId { get; set; }
+
+    public ContaBancaria? ContaBancaria { get; set; }
 
     [Display(Name = "Cartão de Crédito")]
     public int? CartaoCreditoId { get; set; }
@@ -81,6 +88,7 @@ public class Transacao
 
             resultado.Add(new Transacao
             {
+                UsuarioId = compraBase.UsuarioId,
                 Descricao = parcelas > 1 ? $"{compraBase.Descricao} ({i}/{parcelas})" : compraBase.Descricao,
                 Valor = valorAtual,
                 Data = compraBase.Data,

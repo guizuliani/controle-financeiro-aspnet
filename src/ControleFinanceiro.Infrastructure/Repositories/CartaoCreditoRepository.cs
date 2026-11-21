@@ -16,9 +16,10 @@ public class CartaoCreditoRepository : ICartaoCreditoRepository
 
     public Task<List<CartaoCredito>> ListarTodosOrdenadosPorNomeAsync(
         bool incluirTransacoes = false,
-        bool incluirResgates = false)
+        bool incluirResgates = false,
+        int usuarioId = 1)
     {
-        var query = _context.CartoesCredito.AsQueryable();
+        var query = _context.CartoesCredito.Where(c => c.UsuarioId == usuarioId);
 
         if (incluirTransacoes)
             query = query.Include(c => c.Transacoes);
@@ -29,9 +30,9 @@ public class CartaoCreditoRepository : ICartaoCreditoRepository
         return query.OrderBy(c => c.Nome).ToListAsync();
     }
 
-    public Task<List<CartaoCredito>> ListarComPontosAsync(bool incluirTransacoesEResgates = false)
+    public Task<List<CartaoCredito>> ListarComPontosAsync(bool incluirTransacoesEResgates = false, int usuarioId = 1)
     {
-        var query = _context.CartoesCredito.Where(c => c.AcumulaPontos);
+        var query = _context.CartoesCredito.Where(c => c.UsuarioId == usuarioId && c.AcumulaPontos);
 
         if (incluirTransacoesEResgates)
         {
@@ -46,9 +47,10 @@ public class CartaoCreditoRepository : ICartaoCreditoRepository
     public Task<CartaoCredito?> ObterPorIdAsync(
         int id,
         bool incluirTransacoes = false,
-        bool incluirResgates = false)
+        bool incluirResgates = false,
+        int usuarioId = 1)
     {
-        var query = _context.CartoesCredito.AsQueryable();
+        var query = _context.CartoesCredito.Where(c => c.UsuarioId == usuarioId);
 
         if (incluirTransacoes)
             query = query.Include(c => c.Transacoes);
@@ -59,8 +61,8 @@ public class CartaoCreditoRepository : ICartaoCreditoRepository
         return query.FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    public Task<bool> ExisteAsync(int id) =>
-        _context.CartoesCredito.AnyAsync(c => c.Id == id);
+    public Task<bool> ExisteAsync(int id, int usuarioId = 1) =>
+        _context.CartoesCredito.AnyAsync(c => c.Id == id && c.UsuarioId == usuarioId);
 
     public async Task AdicionarAsync(CartaoCredito cartao) =>
         await _context.CartoesCredito.AddAsync(cartao);

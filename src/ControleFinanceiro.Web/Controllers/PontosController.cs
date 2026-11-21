@@ -6,7 +6,7 @@ using ControleFinanceiro.Models.ViewModels;
 
 namespace ControleFinanceiro.Controllers;
 
-public class PontosController : Controller
+public class PontosController : BaseAuthController
 {
     private readonly IPontosService _pontosService;
 
@@ -18,7 +18,7 @@ public class PontosController : Controller
     // GET: Pontos
     public async Task<IActionResult> Index()
     {
-        var painel = await _pontosService.ObterPainelPontosAsync();
+        var painel = await _pontosService.ObterPainelPontosAsync(UsuarioId);
 
         var viewModel = new PontosViewModel
         {
@@ -42,7 +42,7 @@ public class PontosController : Controller
     // GET: Pontos/Resgatar
     public async Task<IActionResult> Resgatar()
     {
-        var cartoes = await _pontosService.ListarCartoesComPontosAsync();
+        var cartoes = await _pontosService.ListarCartoesComPontosAsync(UsuarioId);
         ViewBag.Cartoes = new SelectList(cartoes, "Id", "Nome");
         return View(new ResgatePontos { Data = DateTime.Today });
     }
@@ -54,11 +54,12 @@ public class PontosController : Controller
     {
         if (ModelState.IsValid)
         {
+            resgate.UsuarioId = UsuarioId;
             var resultado = await _pontosService.ResgatarPontosAsync(resgate);
             if (!resultado.Sucesso)
             {
                 ModelState.AddModelError(resultado.CampoErro ?? string.Empty, resultado.Mensagem);
-                var cartoesDisponiveis = await _pontosService.ListarCartoesComPontosAsync();
+                var cartoesDisponiveis = await _pontosService.ListarCartoesComPontosAsync(UsuarioId);
                 ViewBag.Cartoes = new SelectList(cartoesDisponiveis, "Id", "Nome", resgate.CartaoCreditoId);
                 return View(resgate);
             }
@@ -67,7 +68,7 @@ public class PontosController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        var cartoes = await _pontosService.ListarCartoesComPontosAsync();
+        var cartoes = await _pontosService.ListarCartoesComPontosAsync(UsuarioId);
         ViewBag.Cartoes = new SelectList(cartoes, "Id", "Nome", resgate.CartaoCreditoId);
         return View(resgate);
     }
