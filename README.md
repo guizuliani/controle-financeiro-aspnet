@@ -81,7 +81,7 @@ Aplicação Web moderna para **gestão financeira pessoal/empresarial**, desenvo
 
 2. **Executar a aplicação**:
    ```bash
-   dotnet run
+   dotnet run --project src/ControleFinanceiro.Web
    ```
 
 3. **Acessar no navegador**:
@@ -129,20 +129,11 @@ docker compose down
 ├── src/
 │   ├── ControleFinanceiro.Domain/           # Núcleo puro: Entidades ricas, Enums e Driven Ports (Interfaces)
 │   ├── ControleFinanceiro.Application/      # Casos de Uso, DTOs e Driving Ports (Serviços)
-│   └── ControleFinanceiro.Infrastructure/   # Driven Adapters: EF Core (AppDbContext) e Repositórios SQLite
-├── Controllers/                             # Driving Adapters (ASP.NET Core MVC)
-│   ├── HomeController.cs
-│   ├── CartoesController.cs
-│   ├── PontosController.cs
-│   ├── TransacoesController.cs
-│   └── CategoriasController.cs
-├── Models/                                  # ViewModels Web
-├── Views/                                   # Views Razor modernas com Tailwind CSS + Flowbite
-├── wwwroot/                                 # Ativos estáticos (CSS, JS, Favicon)
+│   ├── ControleFinanceiro.Infrastructure/   # Driven Adapters: EF Core (AppDbContext) e Repositórios SQLite
+│   └── ControleFinanceiro.Web/              # Driving Adapter: ASP.NET Core MVC (Controllers, Views, wwwroot, Program.cs)
 ├── tests/ControleFinanceiro.Tests/          # Suíte de testes unitários (Domínio) e integração (xUnit)
-├── appsettings.json                         # Configuração de conexão do SQLite
 ├── Dockerfile & docker-compose.yml          # Conteinerização multi-stage com persistência
-└── Program.cs                               # Composition Root (Injeção de Dependência)
+└── ControleFinanceiro.slnx                  # Solution unificada
 ```
 
 ---

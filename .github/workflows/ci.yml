@@ -34,7 +34,7 @@ jobs:
       run: dotnet test --configuration Release --no-build --verbosity normal
 
     - name: 📦 Publicar Aplicação (Publish)
-      run: dotnet publish ControleFinanceiro.csproj --configuration Release -o ./publish
+      run: dotnet publish src/ControleFinanceiro.Web/ControleFinanceiro.Web.csproj --configuration Release -o ./publish
 
     - name: 💾 Salvar Artefato de Publicação
       uses: actions/upload-artifact@v7

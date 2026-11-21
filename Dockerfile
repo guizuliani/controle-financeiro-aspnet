@@ -13,19 +13,19 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Copia os csprojs e restaura as dependências aproveitando o cache de camadas do Docker
-COPY ["ControleFinanceiro.csproj", "./"]
+COPY ["src/ControleFinanceiro.Web/ControleFinanceiro.Web.csproj", "src/ControleFinanceiro.Web/"]
 COPY ["src/ControleFinanceiro.Domain/ControleFinanceiro.Domain.csproj", "src/ControleFinanceiro.Domain/"]
 COPY ["src/ControleFinanceiro.Application/ControleFinanceiro.Application.csproj", "src/ControleFinanceiro.Application/"]
 COPY ["src/ControleFinanceiro.Infrastructure/ControleFinanceiro.Infrastructure.csproj", "src/ControleFinanceiro.Infrastructure/"]
-RUN dotnet restore "ControleFinanceiro.csproj"
+RUN dotnet restore "src/ControleFinanceiro.Web/ControleFinanceiro.Web.csproj"
 
 # Copia o restante dos arquivos do projeto
 COPY . .
-RUN dotnet build "ControleFinanceiro.csproj" -c Release -o /app/build --no-restore
+RUN dotnet build "src/ControleFinanceiro.Web/ControleFinanceiro.Web.csproj" -c Release -o /app/build --no-restore
 
 # Estágio de Publicação da aplicação
 FROM build AS publish
-RUN dotnet publish "ControleFinanceiro.csproj" -c Release -o /app/publish /p:UseAppHost=false --no-restore
+RUN dotnet publish "src/ControleFinanceiro.Web/ControleFinanceiro.Web.csproj" -c Release -o /app/publish /p:UseAppHost=false --no-restore
 
 # Estágio Final (Runtime Enxuto)
 FROM base AS final

@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ControleFinanceiro.csproj" />
+    <ProjectReference Include="..\..\src\ControleFinanceiro.Web\ControleFinanceiro.Web.csproj" />
     <ProjectReference Include="..\..\src\ControleFinanceiro.Application\ControleFinanceiro.Application.csproj" />
     <ProjectReference Include="..\..\src\ControleFinanceiro.Domain\ControleFinanceiro.Domain.csproj" />
     <ProjectReference Include="..\..\src\ControleFinanceiro.Infrastructure\ControleFinanceiro.Infrastructure.csproj" />
